@@ -1,6 +1,5 @@
 package com.example.taskmanagement_backend.entities;
 
-import lombok.Data;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,7 +29,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "organization_id", foreignKey = @ForeignKey(name = "fk_user_organization"))
-    private com.example.demo.entities.Organization organization;
+    private com.example.taskmanagement_backend.entities.Organization organization;
 
     private String status;
 
