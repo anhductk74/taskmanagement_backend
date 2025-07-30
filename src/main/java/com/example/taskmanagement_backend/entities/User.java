@@ -37,6 +37,11 @@ public class User {
     @JoinColumn(name = "organization_id", foreignKey = @ForeignKey(name = "fk_user_organization"))
     private com.example.taskmanagement_backend.entities.Organization organization;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TaskAssignee> assignees = new HashSet<>();
+
+
+
     private String status;
 
     private LocalDateTime createdAt;
