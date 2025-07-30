@@ -1,6 +1,7 @@
 package com.example.taskmanagement_backend.entities;
 
 
+import com.example.taskmanagement_backend.enums.ProjectStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +25,8 @@ public class Project {
 
     private String description;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status;
 
     @Column(name = "start_date")
     private LocalDate startDate;

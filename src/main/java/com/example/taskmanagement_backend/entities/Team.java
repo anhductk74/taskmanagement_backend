@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user_groups")
-public class Group {
+@Table(name = "teams")
+public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +23,11 @@ public class Group {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "project_id", foreignKey = @ForeignKey(name = "fk_group_project"))
+    @JoinColumn(name = "project_id", foreignKey = @ForeignKey(name = "fk_team_project"))
     private Project project;
 
     @ManyToOne
-    @JoinColumn(name = "leader_id", foreignKey = @ForeignKey(name = "fk_group_leader"))
+    @JoinColumn(name = "leader_id", foreignKey = @ForeignKey(name = "fk_team_leader"))
     private User leader;
 
     @Column(name = "created_at")
