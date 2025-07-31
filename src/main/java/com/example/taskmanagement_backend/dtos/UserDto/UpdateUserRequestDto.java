@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,10 +19,12 @@ public class UpdateUserRequestDto {
     @NotBlank
     @Email
     private String email;
+    private String avt_url;
+    private Boolean deleted;
 
     private String password;
 
-    private Integer roleId;
+    private List<String> roleNames;
 
     private Integer organizationId;
 

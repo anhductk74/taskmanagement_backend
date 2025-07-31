@@ -2,6 +2,9 @@ package com.example.taskmanagement_backend.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -13,6 +16,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+//Chỉ 1 user cần dùng đoạn này để xoá mềm
+@FilterDef(name = "softDeleteFilter", parameters = @ParamDef(name = "deleted", type = Boolean.class))
+@Filter(name = "softDeleteFilter", condition = "deleted = :deleted")
 public class User {
 
     @Id
@@ -24,6 +30,12 @@ public class User {
     private String email;
 
     private String password;
+
+    private String avt_url;
+
+    @Column(nullable = false)
+    private boolean deleted = false;
+
 
     @ManyToMany
     @JoinTable(
@@ -47,4 +59,6 @@ public class User {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+
 }

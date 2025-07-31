@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,11 +23,16 @@ public class CreateUserRequestDto {
     @NotBlank
     private String password;
 
+    private String avt_url;
+
+    private Boolean deleted;
+
     @NotNull
-    private Integer roleId;
+    private List<String> roleNames;
 
     @NotNull
     private Integer organizationId;
 
     private String status;
+
 }
