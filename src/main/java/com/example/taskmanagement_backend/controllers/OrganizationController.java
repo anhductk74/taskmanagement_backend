@@ -3,7 +3,6 @@ package com.example.taskmanagement_backend.controllers;
 import com.example.taskmanagement_backend.dtos.OrganizationDto.CreateOrganizationRequestDto;
 import com.example.taskmanagement_backend.dtos.OrganizationDto.OrganizationResponseDto;
 import com.example.taskmanagement_backend.dtos.OrganizationDto.UpdateOrganizationRequestDto;
-import com.example.taskmanagement_backend.entities.Organization;
 import com.example.taskmanagement_backend.services.OrganizationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

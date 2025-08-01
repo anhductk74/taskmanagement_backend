@@ -112,5 +112,12 @@ public class UserService {
                 .build();
     }
 
+    public List<UserResponseDto> findUserByUsername(String username) {
+        return userJpaRepository.findByUsernameContainingIgnoreCase(username)
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList()); // hoặc throw exception nếu không thấy
+    }
+
 
 }
