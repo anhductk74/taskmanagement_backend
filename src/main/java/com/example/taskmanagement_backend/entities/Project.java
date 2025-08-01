@@ -44,7 +44,7 @@ public class Project {
 
     @ManyToOne
     @JoinColumn(name = "organization_id", foreignKey = @ForeignKey(name = "fk_project_organization"))
-    private com.example.taskmanagement_backend.entities.Organization organization;
+    private Organization organization;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

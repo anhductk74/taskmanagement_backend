@@ -9,10 +9,11 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrganizationResponseDto {
 
+public class OrganizationResponseDto {
     private Long id;
     private String name;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
 }
