@@ -41,9 +41,4 @@ public class UserController {
     public void deleteUser(@PathVariable Integer id) {
         userService.deleteUser(id);
     }
-
-    @GetMapping("/search/")
-    public List<UserResponseDto> searchUser(@RequestParam("username") String username) {
-        return userService.findUserByUsername(username);
-    }
 }

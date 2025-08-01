@@ -14,25 +14,16 @@ import java.util.List;
 public class CreateUserRequestDto {
 
     @NotBlank
-    private String username;
-
-    @NotBlank
     @Email
     private String email;
 
     @NotBlank
     private String password;
 
-    private String avt_url;
-
-    private Boolean deleted;
 
     @NotNull
-    private List<String> roleNames;
+    private List<Long> roleIds;
 
     @NotNull
     private Integer organizationId;
-
-    private String status;
-
 }
