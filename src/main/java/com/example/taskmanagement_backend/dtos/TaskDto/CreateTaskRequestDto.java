@@ -25,7 +25,7 @@ public class CreateTaskRequestDto {
 
     private LocalDate deadline;
 
-    @NotNull(message = "Project ID is required")
+    // Không bắt buộc nữa
     private Long projectId;
 
     private Long groupId;
