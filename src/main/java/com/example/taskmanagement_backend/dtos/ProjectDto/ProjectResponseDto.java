@@ -1,5 +1,8 @@
 package com.example.taskmanagement_backend.dtos.ProjectDto;
 
+import com.example.taskmanagement_backend.entities.Organization;
+import com.example.taskmanagement_backend.entities.User;
+import com.example.taskmanagement_backend.enums.ProjectStatus;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -24,4 +27,6 @@ public class ProjectResponseDto {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+
+
 }

@@ -16,7 +16,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-//Chỉ 1 user cần dùng đoạn này để xoá mềm
 @FilterDef(name = "softDeleteFilter", parameters = @ParamDef(name = "deleted", type = Boolean.class))
 @Filter(name = "softDeleteFilter", condition = "deleted = :deleted")
 public class User {
@@ -25,17 +24,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String username;
-
     private String email;
 
     private String password;
 
-    private String avt_url;
-
     @Column(nullable = false)
     private boolean deleted = false;
 
+    @Column(nullable = false)
+    private boolean firstLogin = true;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    // --- Relationships ---
 
     @ManyToMany
     @JoinTable(
@@ -47,18 +50,19 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "organization_id", foreignKey = @ForeignKey(name = "fk_user_organization"))
-    private com.example.taskmanagement_backend.entities.Organization organization;
+    private Organization organization;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", orphanRemoval = true)
     private Set<TaskAssignee> assignees = new HashSet<>();
 
+    @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)
+    private UserProfile userProfile;
 
-
-    private String status;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-
-
+    // Helper method để set 2 chiều
+    public void setUserProfile(UserProfile profile) {
+        this.userProfile = profile;
+        if (profile != null) {
+            profile.setUser(this);
+        }
+    }
 }
