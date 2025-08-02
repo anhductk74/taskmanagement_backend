@@ -17,7 +17,7 @@ public class ProjectResponseDto {
     private Long id;
     private String name;
     private String description;
-    private String status;
+    private ProjectStatus status;
     private LocalDate startDate;
     private LocalDate endDate;
 
