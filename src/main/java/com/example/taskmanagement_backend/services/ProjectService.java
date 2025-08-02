@@ -35,7 +35,18 @@ public class ProjectService {
     }
 
     public ProjectResponseDto createProject(CreateProjectRequestDto dto) {
-        Project project = buildProject(dto);
+        Project project = Project.builder()
+                .name(dto.getName())
+                .description(dto.getDescription())
+                .startDate(dto.getStartDate())
+                .endDate(dto.getEndDate())
+                .owner(dto.getOwnerId() != null ? getUser(dto.getOwnerId()) : null)
+                .projectManager(dto.getPmId() != null ? getUser(dto.getPmId()) : null)
+                .organization(dto.getOrganizationId() != null ? getOrg(dto.getOrganizationId()) : null)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .status(ProjectStatus.PLANNED)
+                .build();
         return convertToDto(projectJpaRepository.save(project));
     }
 
@@ -49,24 +60,12 @@ public class ProjectService {
         if (dto.getPmId() != null) project.setProjectManager(getUser(dto.getPmId()));
         if (dto.getOrganizationId() != null) project.setOrganization(getOrg(dto.getOrganizationId()));
         if (dto.getStatus() != null) project.setStatus(dto.getStatus());
-
         project.setUpdatedAt(LocalDateTime.now());
         return convertToDto(projectJpaRepository.save(project));
     }
 
-    private Project buildProject(CreateProjectRequestDto dto) {
-        return Project.builder()
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .startDate(dto.getStartDate())
-                .endDate(dto.getEndDate())
-                .owner(dto.getOwnerId() != null ? getUser(dto.getOwnerId()) : null)
-                .projectManager(dto.getPmId() != null ? getUser(dto.getPmId()) : null)
-                .organization(dto.getOrganizationId() != null ? getOrg(dto.getOrganizationId()) : null)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .status(ProjectStatus.PLANNED)
-                .build();
+    public void deleteProjectById(Long id) {
+        projectJpaRepository.deleteById(id);
     }
 
     private ProjectResponseDto convertToDto(Project project) {
@@ -74,7 +73,7 @@ public class ProjectService {
                 .id(project.getId())
                 .name(project.getName())
                 .description(project.getDescription())
-                .status(project.getStatus().name()) // nếu status là enum
+                .status(project.getStatus() != null ? project.getStatus() : null)
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
                 .ownerId(Long.valueOf(project.getOwner() != null ? project.getOwner().getId() : null))
@@ -92,6 +91,7 @@ public class ProjectService {
                 .id(dto.getId())
                 .name(dto.getName())
                 .description(dto.getDescription())
+                .status(dto.getStatus())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
                 .owner(getUser(dto.getOwnerId()))
