@@ -32,7 +32,7 @@ public class UpdateUserRequestDto {
 
     private LocalDateTime updatedAt;
 
-    private Integer organizationId;
+    private Long organizationId;
 
     private String organizationName;
 

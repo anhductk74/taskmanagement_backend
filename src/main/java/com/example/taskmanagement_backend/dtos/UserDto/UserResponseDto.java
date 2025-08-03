@@ -26,7 +26,7 @@ import java.util.List;
 @Builder
 public class UserResponseDto {
 
-    private Integer id;
+    private Long id;
 
     private String email;
 
