@@ -24,4 +24,9 @@ public class Organization {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", foreignKey = @ForeignKey(name = "fk_organization_owner"))
+    private User owner;
+
 }

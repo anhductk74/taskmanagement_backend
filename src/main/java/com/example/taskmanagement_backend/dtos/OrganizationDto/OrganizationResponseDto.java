@@ -15,5 +15,6 @@ public class OrganizationResponseDto {
     private String name;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private  Long owner_id;
 
 }

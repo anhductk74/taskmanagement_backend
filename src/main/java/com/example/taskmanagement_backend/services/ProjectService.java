@@ -74,7 +74,7 @@ public class ProjectService {
                 .id(project.getId())
                 .name(project.getName())
                 .description(project.getDescription())
-                .status(project.getStatus().name()) // nếu status là enum
+                .status(project.getStatus() != null ? project.getStatus().name() : null) // nếu status là enum
                 .startDate(project.getStartDate())
                 .endDate(project.getEndDate())
                 .ownerId(Long.valueOf(project.getOwner() != null ? project.getOwner().getId() : null))
