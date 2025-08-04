@@ -24,6 +24,6 @@ public class CreateUserRequestDto {
     @NotNull
     private List<Long> roleIds;
 
-    @NotNull
+
     private Long organizationId;
 }

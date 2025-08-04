@@ -11,7 +11,7 @@ import lombok.*;
 public class UserProfileResponseDto {
 
     @NotBlank
-    private Integer id;
+    private Long id;
 
     private String firstName;
 

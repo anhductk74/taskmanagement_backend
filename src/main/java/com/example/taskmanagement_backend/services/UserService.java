@@ -30,8 +30,9 @@ public class UserService {
     private final RoleJpaRepository roleRepository;
     private final OrganizationJpaRepository organizationRepository;
     private final JwtService jwtService;
+    private final UserProfileRepository userProfileRepository;
 
-//    public UserService(UserJpaRepository userRepository, RoleJpaRepository roleRepository, OrganizationJpaRepository organizationRepository,  JwtService jwtService ) {
+    //    public UserService(UserJpaRepository userRepository, RoleJpaRepository roleRepository, OrganizationJpaRepository organizationRepository,  JwtService jwtService ) {
 //        this.userRepository = userRepository;
 //        this.roleRepository = roleRepository;
 //        this.organizationRepository = organizationRepository;
@@ -57,31 +58,78 @@ public class UserService {
                 .build();
     }
 
+    //    public UserResponseDto createUser(CreateUserRequestDto dto) {
+//        // Lấy danh sách role từ ID
+//        Set<Role> roles = roleRepository.findAllById(dto.getRoleIds())
+//                .stream()
+//                .map(role -> (Role) role)
+//                .collect(Collectors.toSet());
+//
+//        // Tìm organization từ ID
+//        Organization organization = organizationRepository.findById(dto.getOrganizationId())
+//                .orElseThrow(() -> new EntityNotFoundException("Organization not found"));
+//
+//        // Tạo user
+//        User user = User.builder()
+//                .email(dto.getEmail())
+//                .password(dto.getPassword())
+//                .roles(roles)
+//                .organization(organization)
+//                .firstLogin(true)
+//                .deleted(false) // Mặc định false
+//                .createdAt(LocalDateTime.now())
+//                .updatedAt(LocalDateTime.now())
+//                .build();
+//
+//        // Lưu user và trả kết quả
+//        return convertToDto(userRepository.save(user));
+//    }
     public UserResponseDto createUser(CreateUserRequestDto dto) {
-        // Lấy danh sách role từ ID
+        // Lấy role
         Set<Role> roles = roleRepository.findAllById(dto.getRoleIds())
                 .stream()
                 .map(role -> (Role) role)
                 .collect(Collectors.toSet());
 
-        // Tìm organization từ ID
-        Organization organization = organizationRepository.findById(dto.getOrganizationId())
-                .orElseThrow(() -> new EntityNotFoundException("Organization not found"));
+        // Lấy organization
+        Organization organization = null;
+
+        if (dto.getOrganizationId() != null) {
+            organization = organizationRepository.findById(dto.getOrganizationId())
+                    .orElseThrow(() -> new RuntimeException("Organization not found"));
+        }
+
+// và set organization cho user nếu cần:
+//        user.setOrganization(organization);
 
         // Tạo user
         User user = User.builder()
                 .email(dto.getEmail())
                 .password(dto.getPassword())
+                .firstLogin(true)
+                .deleted(false)
                 .roles(roles)
                 .organization(organization)
-                .firstLogin(true)
-                .deleted(false) // Mặc định false
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Lưu user và trả kết quả
-        return convertToDto(userRepository.save(user));
+        // Lưu user trước để lấy ID
+        User savedUser = userRepository.save(user);
+
+        // Tạo UserProfile trống
+        UserProfile profile = UserProfile.builder()
+                .user(savedUser)
+                .firstName("")
+                .lastName("")
+                .status("active")
+                .avtUrl("")
+                .build();
+
+        savedUser.setUserProfile(profile);
+        userProfileRepository.save(profile);
+
+        return convertToDto(savedUser);
     }
 
     public UserResponseDto updateUser(Long id, UpdateUserRequestDto dto) {

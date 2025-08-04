@@ -26,4 +26,5 @@ public class AuthController {
         LoginResponseDto result = this.userService.login(request);
         return ResponseEntity.ok(result);
     }
+
 }

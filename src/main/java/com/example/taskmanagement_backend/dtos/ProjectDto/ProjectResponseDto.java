@@ -3,6 +3,7 @@ package com.example.taskmanagement_backend.dtos.ProjectDto;
 import com.example.taskmanagement_backend.entities.Organization;
 import com.example.taskmanagement_backend.entities.User;
 import com.example.taskmanagement_backend.enums.ProjectStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public class ProjectResponseDto {
     private Long pmId;
     private Long organizationId;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "UTC")
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
