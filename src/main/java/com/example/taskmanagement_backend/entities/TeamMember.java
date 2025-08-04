@@ -11,19 +11,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "group_members")
-public class GroupMember {
+@Table(name = "team_members")
+public class TeamMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "group_id", nullable = false, foreignKey = @ForeignKey(name = "fk_groupmember_group"))
-    private Group group;
+    @JoinColumn(name = "team_id", nullable = false, foreignKey = @ForeignKey(name = "fk_teammember_team"))
+    private Team team;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_groupmember_user"))
+    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_teammember_user"))
     private User user;
 
     @Column(name = "joined_at")

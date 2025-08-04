@@ -1,9 +1,14 @@
 package com.example.taskmanagement_backend.entities;
 
+import com.example.taskmanagement_backend.enums.TaskPriority;
+import com.example.taskmanagement_backend.enums.TaskStatus;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -21,9 +26,11 @@ public class Task {
 
     private String description;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 
-    private String priority;
+    @Enumerated(EnumType.STRING)
+    private TaskPriority priority;
 
     private LocalDate deadline;
 
@@ -33,19 +40,21 @@ public class Task {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    @ManyToOne
-    @JoinColumn(name = "assigned_to", foreignKey = @ForeignKey(name = "fk_task_assigned_to"))
-    private User assignedTo;
+    // Task không bắt buộc phải thuộc team
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "team_id", foreignKey = @ForeignKey(name = "fk_task_team"))
+    private Team team;
 
-    @ManyToOne
-    @JoinColumn(name = "group_id", foreignKey = @ForeignKey(name = "fk_task_group"))
-    private Group group;
-
-    @ManyToOne
+    // Task không bắt buộc phải thuộc project
+    @ManyToOne(optional = true)
     @JoinColumn(name = "project_id", foreignKey = @ForeignKey(name = "fk_task_project"))
     private Project project;
 
-    @ManyToOne
-    @JoinColumn(name = "creator_id", foreignKey = @ForeignKey(name = "fk_task_creator"))
+    // Creator là bắt buộc
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "creator_id", nullable = false, foreignKey = @ForeignKey(name = "fk_task_creator"))
     private User creator;
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TaskAssignee> assignees = new HashSet<>();
 }

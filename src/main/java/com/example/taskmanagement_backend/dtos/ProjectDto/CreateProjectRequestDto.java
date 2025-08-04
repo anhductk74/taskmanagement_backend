@@ -17,9 +17,6 @@ public class CreateProjectRequestDto {
 
     private String description;
 
-    @NotBlank(message = "Status is required")
-    private String status;
-
     @NotNull(message = "Start date is required")
     private LocalDate startDate;
 

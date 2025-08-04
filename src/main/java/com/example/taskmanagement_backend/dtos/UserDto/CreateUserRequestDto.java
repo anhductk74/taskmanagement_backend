@@ -5,14 +5,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CreateUserRequestDto {
-
-    @NotBlank
-    private String username;
 
     @NotBlank
     @Email
@@ -21,11 +20,10 @@ public class CreateUserRequestDto {
     @NotBlank
     private String password;
 
-    @NotNull
-    private Integer roleId;
 
     @NotNull
-    private Integer organizationId;
+    private List<Long> roleIds;
 
-    private String status;
+    @NotNull
+    private Long organizationId;
 }
