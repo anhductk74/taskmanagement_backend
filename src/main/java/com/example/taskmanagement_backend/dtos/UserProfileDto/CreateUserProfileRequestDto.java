@@ -19,7 +19,6 @@ public class CreateUserProfileRequestDto {
 
     private String status;
 
-
     @NotNull
-    private Integer userId;
+    private Long userId;
 }
