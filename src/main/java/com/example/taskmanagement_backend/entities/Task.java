@@ -55,6 +55,12 @@ public class Task {
     @JoinColumn(name = "creator_id", nullable = false, foreignKey = @ForeignKey(name = "fk_task_creator"))
     private User creator;
 
+    @Builder.Default
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TaskAssignee> assignees = new HashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<TaskChecklist> checklists = new HashSet<>();
+
 }

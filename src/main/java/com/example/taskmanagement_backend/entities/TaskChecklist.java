@@ -23,6 +23,7 @@ public class TaskChecklist {
     @Column(nullable = false)
     private String item;
 
+    @Builder.Default
     @Column(name = "is_completed")
     private Boolean isCompleted = false;
 

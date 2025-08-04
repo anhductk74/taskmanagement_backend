@@ -1,9 +1,11 @@
 package com.example.taskmanagement_backend.dtos.TaskDto;
 
+import com.example.taskmanagement_backend.dtos.TaskChecklistDto.TaskChecklistResponseDto;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -34,4 +36,6 @@ public class TaskResponseDto {
     private Long projectId;
 
     private Long creatorId;
+    private List<TaskChecklistResponseDto> checklists;
+
 }

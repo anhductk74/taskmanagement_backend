@@ -1,5 +1,6 @@
 package com.example.taskmanagement_backend.services;
 
+import com.example.taskmanagement_backend.dtos.TaskChecklistDto.TaskChecklistResponseDto;
 import com.example.taskmanagement_backend.dtos.TaskDto.CreateTaskRequestDto;
 import com.example.taskmanagement_backend.dtos.TaskDto.TaskResponseDto;
 import com.example.taskmanagement_backend.dtos.TaskDto.UpdateTaskRequestDto;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TaskService {
 
-    private final TaskRepository taskRepository;
+    private final TaskJpaRepository taskRepository;
     private final ProjectJpaRepository projectJpaRepository;
     private final UserJpaRepository userJpaRepository;
     private final TeamJpaRepository teamJpaRepository;
@@ -109,6 +110,25 @@ public class TaskService {
 
                 .projectId(task.getProject() != null ? task.getProject().getId() : null)
                 .groupId(task.getTeam() != null ? task.getTeam().getId() : null)
+
+                .checklists(
+                        task.getChecklists() != null
+                                ? task.getChecklists().stream()
+                                .map(c -> TaskChecklistResponseDto.builder()
+                                        .id(c.getId())
+                                        .item(c.getItem())
+                                        .isCompleted(c.getIsCompleted())
+                                        .createdAt(c.getCreatedAt())
+                                        .taskId(task.getId())
+                                        .build())
+                                .collect(Collectors.toList())
+                                : null
+                )
                 .build();
+
+
+
+
     }
+
 }
