@@ -10,14 +10,10 @@ import lombok.*;
 @Builder
 public class UpdateUserProfileRequestDto {
 
-
     private String firstName;
 
     private String lastName;
 
     private String avtUrl;
 
-    private String status;
-
-    private Boolean firstLogin;
 }

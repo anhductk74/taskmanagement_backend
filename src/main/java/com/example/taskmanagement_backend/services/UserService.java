@@ -1,10 +1,12 @@
 package com.example.taskmanagement_backend.services;
 
 import com.example.taskmanagement_backend.dtos.UserDto.*;
+import com.example.taskmanagement_backend.dtos.UserProfileDto.UserProfileResponseDto;
 import com.example.taskmanagement_backend.entities.Organization;
 import com.example.taskmanagement_backend.entities.Role;
 import com.example.taskmanagement_backend.entities.User;
 import com.example.taskmanagement_backend.entities.UserProfile;
+import com.example.taskmanagement_backend.exceptions.DuplicateEmailException;
 import com.example.taskmanagement_backend.exceptions.HttpException;
 import com.example.taskmanagement_backend.repositories.OrganizationJpaRepository;
 import com.example.taskmanagement_backend.repositories.RoleJpaRepository;
@@ -17,10 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -31,6 +30,7 @@ public class UserService {
     private final OrganizationJpaRepository organizationRepository;
     private final JwtService jwtService;
     private final UserProfileRepository userProfileRepository;
+    private final UserProfileService  userProfileService;
 
     //    public UserService(UserJpaRepository userRepository, RoleJpaRepository roleRepository, OrganizationJpaRepository organizationRepository,  JwtService jwtService ) {
 //        this.userRepository = userRepository;
@@ -47,45 +47,28 @@ public class UserService {
         if (!request.getPassword().equals(user.getPassword())) {
             throw new HttpException("Invalid username or password", HttpStatus.UNAUTHORIZED);
         }
-
+        UserProfileResponseDto userProfileResponseDto = userProfileService.getUserProfile(user.getId());
+        List<Role> roles = new ArrayList<>(user.getRoles());
         // Generate a new access token (with full data + roles)
-        String accessToken = jwtService.generateAccessToken(user);
+        String accessToken = jwtService.generateAccessToken(user, userProfileService.convertToEntity(userProfileResponseDto));
 
         return LoginResponseDto.builder()
                 .id(user.getId())
                 .email(user.getEmail())
+                .roles(roles)
+                .profile(userProfileResponseDto)
                 .accessToken(accessToken)
                 .build();
     }
 
-    //    public UserResponseDto createUser(CreateUserRequestDto dto) {
-//        // Lấy danh sách role từ ID
-//        Set<Role> roles = roleRepository.findAllById(dto.getRoleIds())
-//                .stream()
-//                .map(role -> (Role) role)
-//                .collect(Collectors.toSet());
-//
-//        // Tìm organization từ ID
-//        Organization organization = organizationRepository.findById(dto.getOrganizationId())
-//                .orElseThrow(() -> new EntityNotFoundException("Organization not found"));
-//
-//        // Tạo user
-//        User user = User.builder()
-//                .email(dto.getEmail())
-//                .password(dto.getPassword())
-//                .roles(roles)
-//                .organization(organization)
-//                .firstLogin(true)
-//                .deleted(false) // Mặc định false
-//                .createdAt(LocalDateTime.now())
-//                .updatedAt(LocalDateTime.now())
-//                .build();
-//
-//        // Lưu user và trả kết quả
-//        return convertToDto(userRepository.save(user));
-//    }
+
+
+
     public UserResponseDto createUser(CreateUserRequestDto dto) {
         // Lấy role
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new DuplicateEmailException("Email already exists: " + dto.getEmail());
+        }
         Set<Role> roles = roleRepository.findAllById(dto.getRoleIds())
                 .stream()
                 .map(role -> (Role) role)
@@ -98,10 +81,6 @@ public class UserService {
             organization = organizationRepository.findById(dto.getOrganizationId())
                     .orElseThrow(() -> new RuntimeException("Organization not found"));
         }
-
-// và set organization cho user nếu cần:
-//        user.setOrganization(organization);
-
         // Tạo user
         User user = User.builder()
                 .email(dto.getEmail())
