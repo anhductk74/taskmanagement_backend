@@ -21,4 +21,6 @@ public class UserProfileResponseDto {
 
     private String avtUrl;
 
+    private Long userId;
+
 }
