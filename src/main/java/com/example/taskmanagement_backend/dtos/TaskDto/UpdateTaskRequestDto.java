@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -21,7 +22,7 @@ public class UpdateTaskRequestDto {
 
     private LocalDate deadline;
 
-    private Long assignedToId;
+    private List<Long> assignedToIds;
 
     private Long groupId;
 }

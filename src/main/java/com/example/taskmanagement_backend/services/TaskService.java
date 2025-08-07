@@ -24,9 +24,10 @@ public class TaskService {
     private final ProjectJpaRepository projectJpaRepository;
     private final UserJpaRepository userJpaRepository;
     private final TeamJpaRepository teamJpaRepository;
+    private final TasksAssigneeJpaRepository  tasksAssigneeJpaRepository;
+
 
     public TaskResponseDto createTask(CreateTaskRequestDto dto) {
-        // Nếu có projectId thì mới tìm Project
         Project project = null;
         if (dto.getProjectId() != null) {
             project = projectJpaRepository.findById(dto.getProjectId())
@@ -51,11 +52,28 @@ public class TaskService {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .creator(creator)
-                .project(project) // có thể null
-                .team(team)       // có thể null
+                .project(project)
+                .team(team)
                 .build();
 
         taskRepository.save(task);
+
+
+        if (dto.getAssignedToIds() != null && !dto.getAssignedToIds().isEmpty()) {
+            for (Long userId : dto.getAssignedToIds()) {
+                User assignee = userJpaRepository.findById(userId)
+                        .orElseThrow(() -> new EntityNotFoundException("User not found with ID: " + userId));
+
+                TaskAssignee taskAssignee = TaskAssignee.builder()
+                        .task(task)
+                        .user(assignee)
+                        .assignedAt(LocalDateTime.now())
+                        .build();
+
+                tasksAssigneeJpaRepository.save(taskAssignee);
+            }
+        }
+
         return mapToDto(task);
     }
 

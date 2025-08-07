@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -30,7 +31,7 @@ public class CreateTaskRequestDto {
 
     private Long groupId;
 
-    private Long assignedToId;
+    private List<Long> assignedToIds;
 
     @NotNull(message = "Creator ID is required")
     private Long creatorId;

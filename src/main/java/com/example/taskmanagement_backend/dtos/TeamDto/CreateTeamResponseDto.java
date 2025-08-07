@@ -14,7 +14,7 @@ public class CreateTeamResponseDto {
 
     private String description;
 
-    private Long projectId;
+    private Long project_id;
 
-    private Long leaderId;
+    private Long leader_id;
 }
