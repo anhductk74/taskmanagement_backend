@@ -4,8 +4,8 @@ name: Build and Push Docker Image
 # Điều kiện kích hoạt workflow
 on:
   push:
-    # branches:
-    #   - main
+    branches:
+      - master
     # paths:
     #   - 'demo/**'
     tags:
