@@ -38,8 +38,8 @@ public class TeamService {
         Team team = Team.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
-                .project(dto.getProjectId() != null ? getProject(dto.getProjectId()) : null)
-                .leader(dto.getLeaderId() != null ? getUser(dto.getLeaderId()) : null)
+                .project(dto.getProject_id() != null ? getProject(dto.getProject_id()) : null)
+                .leader(dto.getLeader_id() != null ? getUser(dto.getLeader_id()) : null)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();

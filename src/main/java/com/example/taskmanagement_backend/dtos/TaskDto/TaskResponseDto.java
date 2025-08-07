@@ -29,7 +29,7 @@ public class TaskResponseDto {
 
     private LocalDateTime updatedAt;
 
-    private Long assignedToId;
+    private List<Long> assignedToIds;
 
     private Long groupId;
 

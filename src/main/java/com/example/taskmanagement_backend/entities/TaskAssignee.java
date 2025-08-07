@@ -4,8 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
 
-
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "task_assignees", uniqueConstraints = @UniqueConstraint(columnNames = {"task_id", "user_id"}))
 public class TaskAssignee {
@@ -23,7 +27,7 @@ public class TaskAssignee {
     private User user;
 
     @Column(name = "assigned_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp assignedAt;
+    private LocalDateTime assignedAt;
 
     // constructors, getters, setters
 }
