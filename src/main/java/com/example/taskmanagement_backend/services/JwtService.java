@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
+import com.example.taskmanagement_backend.dtos.UserProfileDto.UserProfileResponseDto;
 import com.example.taskmanagement_backend.entities.Role;
 import com.example.taskmanagement_backend.entities.User;
 import com.example.taskmanagement_backend.entities.UserProfile;
@@ -46,11 +47,11 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateAccessToken(User user, UserProfile userProfile) {
+    public String generateAccessToken(User user, UserProfileResponseDto userProfileResponseDto) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getId());
         claims.put("roles", user.getRoles());
-        claims.put("profile", userProfile);
+        claims.put("userProfile", userProfileResponseDto);
         claims.put("type", "access_token"); // Token type identifier
 
         long jwtExpiration = 86400000;

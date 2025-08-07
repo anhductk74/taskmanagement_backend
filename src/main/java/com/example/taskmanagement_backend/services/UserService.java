@@ -50,7 +50,7 @@ public class UserService {
         UserProfileResponseDto userProfileResponseDto = userProfileService.getUserProfile(user.getId());
         List<Role> roles = new ArrayList<>(user.getRoles());
         // Generate a new access token (with full data + roles)
-        String accessToken = jwtService.generateAccessToken(user, userProfileService.convertToEntity(userProfileResponseDto));
+        String accessToken = jwtService.generateAccessToken(user,userProfileResponseDto);
 
         return LoginResponseDto.builder()
                 .id(user.getId())
