@@ -14,7 +14,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,36 +26,40 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(exceptionHandlingCustomizer -> exceptionHandlingCustomizer
-                        .authenticationEntryPoint(this.customAuthenticationEntryPoint)
-                        .accessDeniedHandler(this.customAccessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth
+                        // Public endpoints - OAuth2 must be first
+                        .requestMatchers("/api/auth/google/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
-                        // Cho phép đăng ký tài khoản không cần JWT
+                        
+                        // Swagger/OpenAPI endpoints
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        
+                        // User registration
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-
-                        // Cho phép đăng ký tài khoản không cần JWT
                         .requestMatchers(HttpMethod.POST, "/api/organizations").permitAll()
 
-                        // Những thao tác khác với users
-                        .requestMatchers("/api/users/**").hasAnyRole("owner", "pm")
-
-                        .requestMatchers("/api/tasks/**").hasAnyRole("admin", "owner", "pm")
-                        .requestMatchers(HttpMethod.GET, "/api/projects/{id}").hasRole("PM")
-                        .requestMatchers(HttpMethod.PUT, "/api/projects/{id}").hasRole("PM")
-                        .requestMatchers("/api/projects/**").hasAnyRole("admin", "owner")
-                        .requestMatchers(HttpMethod.GET, "/api/organizations/{id}").hasRole("owner")
-                        .requestMatchers(HttpMethod.PUT, "/api/organizations/{id}").hasRole("owner")
-                        .requestMatchers(HttpMethod.DELETE, "/api/organizations/{id}").hasRole("owner")
-                        .requestMatchers("/api/organizations/**").hasAnyRole("admin")
-                        .anyRequest().permitAll())
+                        // Protected endpoints with role-based access
+                        .requestMatchers("/api/users/**").hasAnyRole("OWNER", "PM", "ADMIN")
+                        .requestMatchers("/api/tasks/**").hasAnyRole("ADMIN", "OWNER", "PM", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/projects/{id}").hasAnyRole("PM", "OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/projects/{id}").hasAnyRole("PM", "OWNER")
+                        .requestMatchers("/api/projects/**").hasAnyRole("ADMIN", "OWNER", "PM")
+                        .requestMatchers(HttpMethod.GET, "/api/organizations/{id}").hasAnyRole("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/organizations/{id}").hasAnyRole("OWNER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/organizations/{id}").hasRole("OWNER")
+                        .requestMatchers("/api/organizations/**").hasAnyRole("ADMIN", "OWNER")
+                        
+                        // All other requests require authentication
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

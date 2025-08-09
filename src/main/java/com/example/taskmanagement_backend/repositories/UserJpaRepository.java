@@ -19,4 +19,15 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
 
    boolean existsByEmail(String email);
 
+   /**
+    * Find first user by role name, ordered by ID ascending
+    */
+   @Query("SELECT u FROM User u JOIN u.roles r WHERE r.name = :roleName ORDER BY u.id ASC")
+   Optional<User> findFirstByRoles_NameOrderByIdAsc(@Param("roleName") String roleName);
+
+   /**
+    * Find first user ordered by ID ascending (fallback for default owner)
+    */
+   Optional<User> findFirstByOrderByIdAsc();
+
 }
