@@ -50,4 +50,13 @@ public class OrganizationController {
         organizationService.deleteOrganization(id);
         return ResponseEntity.ok("Deleted Organization with id: " + id);
     }
+    @GetMapping("/by-owner/{ownerId}")
+    public ResponseEntity<?> getOrganizationByOwnerId(@PathVariable Long ownerId) {
+        OrganizationResponseDto org = organizationService.getOrganizationByOwnerId(ownerId);
+        if (org == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "Không tìm thấy tổ chức của owner với ID: " + ownerId));
+        }
+        return ResponseEntity.ok(org);
+    }
 }
