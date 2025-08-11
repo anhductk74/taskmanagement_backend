@@ -28,6 +28,7 @@ public class ProjectInvitationService {
     private final ProjectInvitationRepository invitationRepository;
     private final ProjectJpaRepository projectRepository;
     private final UserJpaRepository userRepository;
+    private final EmailService emailService;
 
     public ProjectInvitationResponseDto createInvitation(CreateProjectInvitationRequestDto dto) {
         Project project = projectRepository.findById(dto.getProjectId())
@@ -46,6 +47,11 @@ public class ProjectInvitationService {
                 .build();
 
         invitationRepository.save(invitation);
+        // Tạo link accept
+        String inviteLink = "localhost:8080/api/accept-invitation?token=" + invitation.getId().toString();
+
+        // Gửi email
+        emailService.sendInvitationEmail(dto.getEmail(), invitation.getProject().getName(), inviteLink);
         return toDto(invitation);
     }
 

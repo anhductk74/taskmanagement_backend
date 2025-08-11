@@ -63,6 +63,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
+
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 

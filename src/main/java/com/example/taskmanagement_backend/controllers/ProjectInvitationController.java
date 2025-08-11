@@ -5,9 +5,11 @@ package com.example.taskmanagement_backend.controllers;
 import com.example.taskmanagement_backend.dtos.ProjectInvitatinDto.CreateProjectInvitationRequestDto;
 import com.example.taskmanagement_backend.dtos.ProjectInvitatinDto.ProjectInvitationResponseDto;
 import com.example.taskmanagement_backend.dtos.ProjectInvitatinDto.UpdateProjectInvitationStatusRequestDto;
+import com.example.taskmanagement_backend.services.EmailService;
 import com.example.taskmanagement_backend.services.ProjectInvitationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,9 @@ import java.util.List;
 public class ProjectInvitationController {
 
     private final ProjectInvitationService invitationService;
+
+
+
 
     @PostMapping
     public ResponseEntity<ProjectInvitationResponseDto> createInvitation(
