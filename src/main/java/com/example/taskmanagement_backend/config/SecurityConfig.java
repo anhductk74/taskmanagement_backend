@@ -59,6 +59,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/organizations").permitAll()
 
                         // Users
+                        .requestMatchers("/api/users/by-email").permitAll()
                         .requestMatchers("/api/users/**").hasAnyRole("owner", "pm", "admin")
 
                         // Tasks
