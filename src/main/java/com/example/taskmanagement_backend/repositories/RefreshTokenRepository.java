@@ -39,7 +39,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
     @Query("""
         DELETE FROM RefreshToken rt WHERE rt.id NOT IN (
             SELECT sub.id FROM (
-                SELECT rt2.id FROM RefreshToken rt2 
+                SELECT rt2.id as id FROM RefreshToken rt2 
                 WHERE rt2.user = rt.user 
                 ORDER BY rt2.createdAt DESC 
                 LIMIT :maxTokensPerUser

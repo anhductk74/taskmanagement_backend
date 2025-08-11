@@ -3,12 +3,14 @@ package com.example.taskmanagement_backend.services;
 import com.example.taskmanagement_backend.dtos.ProjectDto.CreateProjectRequestDto;
 import com.example.taskmanagement_backend.dtos.ProjectDto.ProjectResponseDto;
 import com.example.taskmanagement_backend.dtos.ProjectDto.UpdateProjectRequestDto;
+import com.example.taskmanagement_backend.dtos.TeamDto.TeamResponseDto;
 import com.example.taskmanagement_backend.entities.Organization;
 import com.example.taskmanagement_backend.entities.Project;
 import com.example.taskmanagement_backend.entities.User;
 import com.example.taskmanagement_backend.enums.ProjectStatus;
 import com.example.taskmanagement_backend.repositories.OrganizationJpaRepository;
 import com.example.taskmanagement_backend.repositories.ProjectJpaRepository;
+import com.example.taskmanagement_backend.repositories.TeamJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 public class ProjectService {
     @Autowired
     private ProjectJpaRepository projectJpaRepository;
+
     @Autowired
     UserJpaRepository userRepo;
     @Autowired
