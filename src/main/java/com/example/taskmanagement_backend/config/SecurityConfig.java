@@ -66,6 +66,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/organizations/by-owner/{id}").hasRole("owner")
                         .requestMatchers("/api/organizations/**").hasAnyRole("admin")
 
+                        //invatation
+                        .requestMatchers("/api/project-invitations/**").hasAnyRole("owner")
+                        .requestMatchers("/api/team-invitations/**").hasAnyRole("owner", "pm")
+
                         // Anything else
                         .anyRequest().permitAll()
                 )
