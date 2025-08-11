@@ -48,11 +48,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/organizations").permitAll()
 
                         // Protected endpoints with role-based access
-                        .requestMatchers("/api/users/**").hasAnyRole("OWNER", "PM", "ADMIN")
-                        .requestMatchers("/api/tasks/**").hasAnyRole("ADMIN", "OWNER", "PM", "USER")
-                        .requestMatchers(HttpMethod.GET, "/api/projects/{id}").hasAnyRole("PM", "OWNER", "ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/projects/{id}").hasAnyRole("PM", "OWNER")
-                        .requestMatchers("/api/projects/**").hasAnyRole("ADMIN", "OWNER", "PM")
+                        .requestMatchers("/api/users/**").hasAnyRole("OWNER", "PROJECT_MANAGER", "ADMIN")
+                        .requestMatchers("/api/tasks/**").hasAnyRole("ADMIN", "OWNER", "PROJECT_MANAGER", "MEMBER", "LEADER")
+                        .requestMatchers(HttpMethod.GET, "/api/projects/{id}").hasAnyRole("PROJECT_MANAGER", "OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/projects/{id}").hasAnyRole("PROJECT_MANAGER", "OWNER")
+                        .requestMatchers("/api/projects/**").hasAnyRole("ADMIN", "OWNER", "PROJECT_MANAGER")
                         .requestMatchers(HttpMethod.GET, "/api/organizations/{id}").hasAnyRole("OWNER", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/organizations/{id}").hasAnyRole("OWNER")
                         .requestMatchers(HttpMethod.DELETE, "/api/organizations/{id}").hasRole("OWNER")

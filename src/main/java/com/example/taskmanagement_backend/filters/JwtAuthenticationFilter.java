@@ -45,17 +45,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
+            try {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
 
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null, // No credentials are needed for JWT authentication
-                        userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                if (jwtService.isTokenValid(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null, // No credentials are needed for JWT authentication
+                            userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                // Đã xác thực người dùng, đặt thông tin xác thực vào SecurityContext
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                    // Log successful authentication
+                    System.out.println("🔥 JWT Authentication successful for: " + email);
+                    System.out.println("🔥 User authorities: " + userDetails.getAuthorities());
+                    
+                    // Đã xác thực người dùng, đặt thông tin xác thực vào SecurityContext
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                } else {
+                    System.out.println("🔥 JWT Token validation failed for: " + email);
+                }
+            } catch (Exception e) {
+                System.out.println("🔥 Error loading user details for: " + email + " - " + e.getMessage());
             }
         }
 
