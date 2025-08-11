@@ -66,6 +66,49 @@ public class OrganizationService {
         organizationJpaRepository.deleteById(id);
     }
 
+    /**
+     * Find organization by email domain
+     * @param emailDomain the domain part of email (e.g., "company.com")
+     * @return Organization if found, null otherwise
+     */
+    public Organization findByEmailDomain(String emailDomain) {
+        return organizationJpaRepository.findByEmailDomain(emailDomain).orElse(null);
+    }
+
+    /**
+     * Extract domain from email address
+     * @param email full email address
+     * @return domain part of email
+     */
+    public String extractDomainFromEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            return null;
+        }
+        return email.substring(email.lastIndexOf("@") + 1).toLowerCase();
+    }
+
+    /**
+     * Create organization with email domain
+     * @param name organization name
+     * @param emailDomain email domain
+     * @param ownerId owner user id
+     * @return created Organization
+     */
+    public Organization createOrganizationWithDomain(String name, String emailDomain, Long ownerId) {
+        User owner = userJpaRepository.findById(ownerId)
+                .orElseThrow(() -> new IllegalArgumentException("Owner not found with id: " + ownerId));
+
+        Organization org = Organization.builder()
+                .name(name)
+                .emailDomain(emailDomain)
+                .owner(owner)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        return organizationJpaRepository.save(org);
+    }
+
     private OrganizationResponseDto convertDto(Organization org) {
         return new OrganizationResponseDto(
                 org.getId(),

@@ -31,9 +31,11 @@ public class User {
     private String password;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean deleted = false;
 
     @Column(nullable = false)
+    @Builder.Default
     private boolean firstLogin = true;
 
     private LocalDateTime createdAt;
@@ -48,6 +50,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
     @ManyToOne
@@ -55,6 +58,7 @@ public class User {
     private Organization organization;
 
     @OneToMany(mappedBy = "user", orphanRemoval = true)
+    @Builder.Default
     private Set<TaskAssignee> assignees = new HashSet<>();
 
     @OneToOne(mappedBy = "user", orphanRemoval = true, fetch = FetchType.LAZY)

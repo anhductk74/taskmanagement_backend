@@ -31,8 +31,7 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
@@ -43,13 +42,25 @@ dependencies {
 
 	// JWT dependencies
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
-
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+	
+	// OAuth2 & Google
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'com.google.api-client:google-api-client:2.2.0'
+	implementation 'com.google.auth:google-auth-library-oauth2-http:1.19.0'
+	
+	// Password encoding
+	implementation 'org.springframework.security:spring-security-crypto'
+	
+	// Redis for refresh tokens (optional)
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	
+	// Dotenv for environment variable management
+	implementation 'io.github.cdimascio:dotenv-java:3.0.0'
+	
 	compileOnly 'org.projectlombok:lombok:1.18.30'
 	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
+
