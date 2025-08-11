@@ -19,6 +19,9 @@ public class Organization {
 
     private String name;
 
+    @Column(name = "email_domain", unique = true)
+    private String emailDomain; // e.g., "company.com", "university.edu"
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 

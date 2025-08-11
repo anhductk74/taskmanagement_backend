@@ -11,4 +11,11 @@ import java.util.Optional;
 public interface OrganizationJpaRepository extends JpaRepository<Organization, Long> {
     Optional<Organization> findByOwnerId(Long ownerId);
 
+
+    /**
+     * Find organization by email domain
+     * @param emailDomain the domain part of email (e.g., "company.com")
+     * @return Optional<Organization>
+     */
+    Optional<Organization> findByEmailDomain(String emailDomain);
 }
