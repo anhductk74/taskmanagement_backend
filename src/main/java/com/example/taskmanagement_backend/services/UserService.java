@@ -12,6 +12,7 @@ import com.example.taskmanagement_backend.repositories.OrganizationJpaRepository
 import com.example.taskmanagement_backend.repositories.RoleJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserProfileRepository;
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,7 +140,7 @@ public class UserService {
         user.setDeleted(true);
         userRepository.save(user);
     }
-
+//    @Cacheable(value = "users", key = "#id")
     public UserResponseDto getUserById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         return convertToDto(user);
