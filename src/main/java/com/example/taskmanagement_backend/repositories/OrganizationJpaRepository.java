@@ -10,6 +10,8 @@ import java.util.Optional;
 @Repository
 public interface OrganizationJpaRepository extends JpaRepository<Organization, Long> {
 
+
+
     /**
      * Find organization by email domain
      * @param emailDomain the domain part of email (e.g., "company.com")

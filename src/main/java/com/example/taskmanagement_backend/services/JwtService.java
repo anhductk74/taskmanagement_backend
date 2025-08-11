@@ -23,15 +23,17 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 @RequiredArgsConstructor
 public class JwtService {
 
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
     private SecretKey getSigningKey() {
-        String secretKey = "MIsMiHz45ATNS6elM6dQLfN6oQIBDSV+KbAc5PE3rlA=";
-        byte[] keyBytes = io.jsonwebtoken.io.Decoders.BASE64.decode(secretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
     private String createToken(Map<String, Object> claims, String subject, long expiration) {
@@ -43,7 +45,7 @@ public class JwtService {
                 .subject(subject)
                 .issuedAt(now)
                 .expiration(expiryDate)
-                .signWith(getSigningKey(), Jwts.SIG.HS256)
+                .signWith(getSigningKey(), Jwts.SIG.HS512)
                 .compact();
     }
 
