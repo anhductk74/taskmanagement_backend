@@ -1,6 +1,7 @@
 package com.example.taskmanagement_backend.dtos.ProjectDto;
 
 
+import com.example.taskmanagement_backend.enums.ProjectStatus;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -22,6 +23,8 @@ public class CreateProjectRequestDto {
 
     @NotNull(message = "End date is required")
     private LocalDate endDate;
+
+    private ProjectStatus status;
 
     @NotNull(message = "Owner ID is required")
     private Long ownerId;

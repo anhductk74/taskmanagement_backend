@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +33,9 @@ public class TeamService {
 
     public TeamResponseDto getTeamById(Long id) {
         return teamJpaRepository.findById(id).map(this::convertToDto).orElse(null);
+    }
+    public List<TeamResponseDto> findByProjectId(Long projectId) {
+        return teamJpaRepository.findByProject_Id(projectId).stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     public TeamResponseDto createTeams(CreateTeamResponseDto dto){

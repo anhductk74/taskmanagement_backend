@@ -75,4 +75,9 @@ public class OrganizationService {
                 org.getOwner() != null ? org.getOwner().getId() : null
         );
     }
+    public OrganizationResponseDto getOrganizationByOwnerId (Long ownerId) {
+             return organizationJpaRepository.findByOwnerId(ownerId)
+                     .map(this::convertDto)
+                     .orElse(null);
+    }
 }

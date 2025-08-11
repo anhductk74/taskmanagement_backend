@@ -44,5 +44,9 @@ public class TeamController {
         }
         return ResponseEntity.notFound().build();
     }
+    @GetMapping("/project/{projectId}")
+    public List<TeamResponseDto> getTeamsByProjectId(@PathVariable Long projectId) {
+        return teamService.findByProjectId(projectId);
+    }
 
 }
