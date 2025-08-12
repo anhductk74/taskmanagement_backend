@@ -1,7 +1,9 @@
 package com.example.taskmanagement_backend.services;
 
-import org.springframework.mail.SimpleMailMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -14,20 +16,29 @@ public class EmailService {
     }
 
     @Async // gửi email bất đồng bộ
-    public void sendInvitationEmail(String to, String projectName, String inviteLink) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject("Lời mời tham gia dự án: " + projectName);
+    public void sendInvitationEmail(String to, String projectName, String inviteLink) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        String content = String.format(
-                        "Xin chào,\n\n" +
-                        "Bạn được mời tham gia dự án '%s'.\n" +
-                        "Vui lòng bấm vào liên kết sau để chấp nhận lời mời:\n%s\n\n" +
-                        "Trân trọng,\nHệ thống Quản lý Dự án",
+        helper.setTo(to);
+        helper.setSubject("Lời mời tham gia dự án: " + projectName);
+
+        String htmlContent = String.format(
+                "<!DOCTYPE html>" +
+                        "<html>" +
+                        "<body style='font-family: Arial, sans-serif;'>" +
+                        "<p>Xin chào,</p>" +
+                        "<p>Bạn được mời tham gia dự án <strong>%s</strong>.</p>" +
+                        "<p>Vui lòng bấm vào liên kết sau để chấp nhận lời mời:</p>" +
+                        "<p><a href='%s' style='color: blue; text-decoration: underline;'>Chấp nhận lời mời</a></p>" +
+                        "<br>" +
+                        "<p>Trân trọng,<br>Hệ thống Quản lý Dự án</p>" +
+                        "</body>" +
+                        "</html>",
                 projectName, inviteLink
         );
 
-        message.setText(content);
+        helper.setText(htmlContent, true); // true = gửi HTML
         mailSender.send(message);
     }
 }

@@ -17,5 +17,5 @@ public class CreateProjectMemberRequestDto {
     private Long userId;
 
     @NotBlank(message = "Role is required")
-    private String role;
+    private Long roleId;
 }
