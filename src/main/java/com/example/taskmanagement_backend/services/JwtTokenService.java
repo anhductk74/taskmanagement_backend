@@ -44,6 +44,7 @@ public class JwtTokenService {
         claims.put("roles", user.getRoles().stream()
                 .map(role -> role.getName())
                 .toList());
+        claims.put("type", "access_token"); // ✅ Add required token type for validation
         
         return createToken(claims, user.getEmail(), accessTokenExpiration);
     }
