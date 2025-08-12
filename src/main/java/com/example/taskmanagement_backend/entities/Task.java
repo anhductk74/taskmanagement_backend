@@ -32,6 +32,7 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskPriority priority;
 
+
     private LocalDate deadline;
 
     @Column(name = "created_at")

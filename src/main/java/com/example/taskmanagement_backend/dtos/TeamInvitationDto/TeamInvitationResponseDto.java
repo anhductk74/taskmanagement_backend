@@ -15,6 +15,7 @@ public class TeamInvitationResponseDto {
         private Long invitedById;
         private String invitedByName;
         private InvitationStatus status;
+        private Long roleId;
         private String token;
         private LocalDateTime createdAt;
 

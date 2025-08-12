@@ -5,14 +5,12 @@ import com.example.taskmanagement_backend.dtos.ProjectInvitatinDto.UpdateProject
 import com.example.taskmanagement_backend.dtos.TeamInvitationDto.CreateTeamInvitationRequestDto;
 import com.example.taskmanagement_backend.dtos.TeamInvitationDto.TeamInvitationResponseDto;
 import com.example.taskmanagement_backend.dtos.TeamInvitationDto.UpdateTeamInvitationStatusRequestDto;
-import com.example.taskmanagement_backend.entities.ProjectInvitation;
-import com.example.taskmanagement_backend.entities.Team;
-import com.example.taskmanagement_backend.entities.TeamInvitation;
-import com.example.taskmanagement_backend.entities.User;
+import com.example.taskmanagement_backend.entities.*;
 import com.example.taskmanagement_backend.enums.InvitationStatus;
-import com.example.taskmanagement_backend.repositories.TeamInvatationJpaRepository;
-import com.example.taskmanagement_backend.repositories.TeamJpaRepository;
-import com.example.taskmanagement_backend.repositories.UserJpaRepository;
+import com.example.taskmanagement_backend.repositories.*;
+import com.example.taskmanagement_backend.services.infrastructure.ConcurrentTaskService;
+import com.example.taskmanagement_backend.services.infrastructure.EmailService;
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,23 +24,75 @@ import java.util.stream.Collectors;
 public class TeamInvitationService {
     private final TeamInvatationJpaRepository teamInvatationJpaRepository;
     private final TeamJpaRepository teamJpaRepository;
-    private UserJpaRepository userJpaRepository;
+    private final TeamMemberJpaRepository teamMemberJpaRepository;
+    private final UserJpaRepository userJpaRepository;
+    private final RoleJpaRepository roleJpaRepository;
+    private final EmailService emailService;
+    private final ConcurrentTaskService concurrentTaskService;
 
     public TeamInvitationResponseDto createTeamInvitation(CreateTeamInvitationRequestDto dto) {
         Team team = teamJpaRepository.findById(dto.getTeamId())
-                .orElseThrow(() -> new EntityNotFoundException("Project không tồn tại"));
+                .orElseThrow(() -> new EntityNotFoundException("Team không tồn tại"));
         User invitedBy = userJpaRepository.findById(dto.getInvitedById())
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
+        User userInvite = userJpaRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("User được mời không tồn tại"));
+        Role role = roleJpaRepository.findById(dto.getRoleId())
+                .orElseThrow(()-> new EntityNotFoundException("User không tồn tại"));
         TeamInvitation invitation = TeamInvitation.builder()
                 .email(dto.getEmail())
                 .team(team)
                 .invitedBy(invitedBy)
                 .status(InvitationStatus.PENDING)
+                .role(role)
                 .token(java.util.UUID.randomUUID().toString())
                 .createdAt(LocalDateTime.now())
                 .build();
             teamInvatationJpaRepository.save(invitation);
+        //create Mail Link
+        String inviteLink = "http://localhost:8080/api/invitations/accept-team?token=" + invitation.getToken();
+
+        //Gui mail dong bo
+        concurrentTaskService.executeTask(() -> {
+            try {
+                emailService.sendInvitationEmail(
+                        dto.getEmail(),
+                        invitation.getTeam().getName(),
+                        inviteLink
+                );
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        });
         return toDto(invitation);
+    }
+    public String acceptInvitation(String token) {
+        TeamInvitation invitation = teamInvatationJpaRepository.findByToken(token)
+                .orElseThrow(() -> new EntityNotFoundException("Token không hợp lệ"));
+
+        if (invitation.getStatus() != InvitationStatus.PENDING) {
+            throw new IllegalStateException("Lời mời đã hết hạn hoặc đã xử lý trước đó");
+        }
+
+        // Tìm user theo email
+        User user = userJpaRepository.findByEmail(invitation.getEmail())
+                .orElseThrow(() -> new EntityNotFoundException("Người dùng không tồn tại"));
+
+        // Cập nhật status
+        invitation.setStatus(InvitationStatus.ACCEPTED);
+        teamInvatationJpaRepository.save(invitation);
+
+        // Thêm vào bảng project_members
+        TeamMember member = TeamMember.builder()
+                .team(invitation.getTeam())
+                .user(user)
+                .roleId(invitation.getRole().getId())
+                .joinedAt(LocalDateTime.now())
+                .build();
+
+        teamMemberJpaRepository.save(member);
+
+        return "Lời mời đã được chấp nhận";
     }
     public List<TeamInvitationResponseDto> getTeamInvitationsByTeam(Long teamId) {
         return teamInvatationJpaRepository.findByTeamId(teamId).stream()
