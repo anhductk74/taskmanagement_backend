@@ -16,7 +16,7 @@ public class ProjectMemberResponseDto {
 
     private Long userId;
 
-    private String role;
+    private Long roleId;
 
     private LocalDateTime joinedAt;
 }

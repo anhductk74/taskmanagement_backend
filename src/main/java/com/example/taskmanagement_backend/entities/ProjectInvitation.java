@@ -27,9 +27,15 @@ public class ProjectInvitation {
     @JoinColumn(name = "invited_by", nullable = false)
     private User invitedBy;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private InvitationStatus status = InvitationStatus.PENDING;
+
+
 
     private String token;
 

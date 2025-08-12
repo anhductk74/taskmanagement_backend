@@ -12,9 +12,12 @@ import com.example.taskmanagement_backend.repositories.OrganizationJpaRepository
 import com.example.taskmanagement_backend.repositories.RoleJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserProfileRepository;
+import jakarta.persistence.Cacheable;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +33,7 @@ public class UserService {
     private final OrganizationJpaRepository organizationRepository;
     private final JwtService jwtService;
     private final UserProfileRepository userProfileRepository;
-    private final UserProfileService  userProfileService;
+    private final UserProfileService userProfileService;
 
     //    public UserService(UserJpaRepository userRepository, RoleJpaRepository roleRepository, OrganizationJpaRepository organizationRepository,  JwtService jwtService ) {
 //        this.userRepository = userRepository;
@@ -50,7 +53,7 @@ public class UserService {
         UserProfileResponseDto userProfileResponseDto = userProfileService.getUserProfile(user.getId());
         List<Role> roles = new ArrayList<>(user.getRoles());
         // Generate a new access token (with full data + roles)
-        String accessToken = jwtService.generateAccessToken(user,userProfileResponseDto);
+        String accessToken = jwtService.generateAccessToken(user, userProfileResponseDto);
 
         return LoginResponseDto.builder()
                 .id(user.getId())
@@ -62,8 +65,7 @@ public class UserService {
     }
 
 
-
-
+    @CachePut(value = "users", key = "#result.id")
     public UserResponseDto createUser(CreateUserRequestDto dto) {
         // Lấy role
         if (userRepository.existsByEmail(dto.getEmail())) {
@@ -111,6 +113,7 @@ public class UserService {
         return convertToDto(savedUser);
     }
 
+    @CachePut(value = "users", key = "#user.id")
     public UserResponseDto updateUser(Long id, UpdateUserRequestDto dto) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -134,12 +137,14 @@ public class UserService {
         return convertToDto(userRepository.save(user));
     }
 
+    @CacheEvict(value = "users", key = "#id")
     public void deleteUser(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         user.setDeleted(true);
         userRepository.save(user);
     }
 
+    //    @Cacheable(value = "users", key = "#id")
     public UserResponseDto getUserById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         return convertToDto(user);
@@ -150,6 +155,45 @@ public class UserService {
                 .filter(u -> !u.isDeleted())
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    @CachePut(value = "users", key = "#userId")
+    public UserResponseDto updateUserRoles(Long userId, Set<Long> roleIds) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Set<Role> roles = new HashSet<>(roleRepository.findAllById(roleIds));
+
+        user.setRoles(roles); // JPA sẽ tự động update bảng users_roles
+        user.setUpdatedAt(LocalDateTime.now());
+
+        return convertToDto(userRepository.save(user));
+    }
+
+    @CachePut(value = "users", key = "#userId")
+    public UserResponseDto addRoleToUser(Long userId, Long roleId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        user.getRoles().add(role);
+        user.setUpdatedAt(LocalDateTime.now());
+
+        return convertToDto(userRepository.save(user));
+    }
+
+    @CachePut(value = "users", key = "#userId")
+    public UserResponseDto removeRoleFromUser(Long userId, Long roleId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        user.getRoles().remove(role);
+        user.setUpdatedAt(LocalDateTime.now());
+
+        return convertToDto(userRepository.save(user));
     }
 
     public UserResponseDto getUserByEmail(String email) {

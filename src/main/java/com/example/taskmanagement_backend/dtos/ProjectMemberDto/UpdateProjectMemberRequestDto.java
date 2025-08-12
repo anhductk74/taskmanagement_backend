@@ -10,5 +10,5 @@ import lombok.*;
 public class UpdateProjectMemberRequestDto {
 
     @NotBlank(message = "Role is required")
-    private String role;
+    private Long roleId;
 }
