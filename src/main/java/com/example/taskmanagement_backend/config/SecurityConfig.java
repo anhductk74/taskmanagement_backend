@@ -60,25 +60,27 @@ public class SecurityConfig {
 
                         // Users
                         .requestMatchers("/api/users/by-email").permitAll()
-                        .requestMatchers("/api/users/**").hasAnyRole("owner", "pm", "admin")
+                        .requestMatchers("/api/users/**").hasAnyRole("OWNER", "PROJECT_MANAGEMENT", "ADMIN")
 
                         // Tasks
-                        .requestMatchers("/api/tasks/**").hasAnyRole("admin", "owner", "pm", "user")
+                        .requestMatchers("/api/tasks/**").hasAnyRole("ADMIN", "OWNER", "PROJECT_MANAGEMENT", "MEMBER", "LEADER")
 
                         // Projects
-                        .requestMatchers(HttpMethod.GET, "/api/projects/{id}").hasAnyRole("pm", "owner", "admin")
-                        .requestMatchers(HttpMethod.PUT, "/api/projects/{id}").hasAnyRole("pm", "owner")
-                        .requestMatchers("/api/projects/**").hasAnyRole("admin", "owner", "pm")
+                        .requestMatchers(HttpMethod.GET, "/api/projects/{id}").hasAnyRole("PROJECT_MANAGEMENT", "OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/projects/{id}").hasAnyRole("PROJECT_MANAGEMENT", "OWNER")
+                        .requestMatchers("/api/projects/**").hasAnyRole("ADMIN", "OWNER", "PROJECT_MANAGEMENT")
 
                         // Organizations
-                        .requestMatchers(HttpMethod.GET, "/api/organizations/{id}").hasAnyRole("owner", "admin")
-                        .requestMatchers(HttpMethod.PUT, "/api/organizations/{id}").hasRole("owner")
-                        .requestMatchers(HttpMethod.DELETE, "/api/organizations/{id}").hasRole("owner")
-                        .requestMatchers("/api/organizations/**").hasAnyRole("admin", "owner")
+                        .requestMatchers(HttpMethod.GET, "/api/organizations/{id}").hasAnyRole("OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/organizations/{id}").hasRole("OWNER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/organizations/{id}").hasRole("OWNER")
+                        .requestMatchers("/api/organizations/**").hasAnyRole("ADMIN", "OWNER")
 
                         // Invitations
-                        .requestMatchers("/api/project-invitations/**").hasRole("owner")
-                        .requestMatchers("/api/team-invitations/**").hasAnyRole("owner", "pm")
+                        .requestMatchers("/api/project-invitations/**").hasRole("OWNER")
+                        .requestMatchers("/api/team-invitations/**").hasAnyRole("OWNER", "PROJECT_MANAGEMENT")
+                        .requestMatchers("/api/invitations/accept**").hasAnyRole("OWNER", "PROJECT_MANAGEMENT","LEADER")
+
 
                         // Any other request must be authenticated
                         .anyRequest().authenticated()

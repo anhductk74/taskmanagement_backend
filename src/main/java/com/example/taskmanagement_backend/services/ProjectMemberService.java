@@ -44,7 +44,7 @@ public class ProjectMemberService {
         ProjectMember projectMember = ProjectMember.builder()
                 .project(project)
                 .user(user)
-                .role(dto.getRole())
+                .roleId(dto.getRoleId())
                 .joinedAt(LocalDateTime.now())
                 .build();
 
@@ -60,7 +60,7 @@ public class ProjectMemberService {
         ProjectMember projectMember = projectMemberJpaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Project member not found with id: " + id));
 
-        projectMember.setRole(dto.getRole());
+        projectMember.setRoleId(dto.getRoleId());
 
         return convertToDto(projectMemberJpaRepository.save(projectMember));
     }
@@ -69,7 +69,7 @@ public class ProjectMemberService {
                 .id(entity.getId())
                 .projectId(entity.getProject().getId())
                 .userId(entity.getUser().getId())
-                .role(entity.getRole())
+                .roleId(entity.getRoleId())
                 .joinedAt(entity.getJoinedAt())
                 .build();
     }

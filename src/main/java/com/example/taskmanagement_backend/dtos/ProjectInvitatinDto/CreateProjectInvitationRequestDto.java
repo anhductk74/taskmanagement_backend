@@ -16,6 +16,9 @@ public class CreateProjectInvitationRequestDto {
     @NotNull(message = "projectId không được để trống")
     private Long projectId;
 
+    @NotNull(message = "role_id không được để trống")
+    private Long roleId;
+
     @NotNull(message = "invitedById không được để trống")
     private Long invitedById;
 }
