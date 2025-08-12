@@ -25,11 +25,11 @@ public class ProjectInvitationController {
 
 
 
-    @PostMapping
-    public ResponseEntity<ProjectInvitationResponseDto> createInvitation(
-            @Valid @RequestBody CreateProjectInvitationRequestDto dto) {
-        return ResponseEntity.ok(invitationService.createInvitation(dto));
-    }
+//    @PostMapping
+//    public ResponseEntity<ProjectInvitationResponseDto> createInvitation(
+//            @Valid @RequestBody CreateProjectInvitationRequestDto dto) {
+//        return ResponseEntity.ok(invitationService.createInvitation(dto));
+//    }
 
     @GetMapping("/project/{projectId}")
     public ResponseEntity<List<ProjectInvitationResponseDto>> getInvitationsByProject(@PathVariable Long projectId) {

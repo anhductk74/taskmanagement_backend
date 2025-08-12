@@ -26,7 +26,7 @@ public class ProjectMember {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "fk_project_member_user"))
     private User user;
 
-    private String role;
+    private Long roleId;
 
     @Column(name = "joined_at")
     private LocalDateTime joinedAt;
