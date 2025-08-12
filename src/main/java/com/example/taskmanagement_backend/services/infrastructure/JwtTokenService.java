@@ -1,4 +1,4 @@
-package com.example.taskmanagement_backend.services;
+package com.example.taskmanagement_backend.services.infrastructure;
 
 import com.example.taskmanagement_backend.entities.RefreshToken;
 import com.example.taskmanagement_backend.entities.User;

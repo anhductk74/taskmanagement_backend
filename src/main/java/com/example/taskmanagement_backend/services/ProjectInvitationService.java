@@ -8,6 +8,8 @@ import com.example.taskmanagement_backend.entities.*;
 import com.example.taskmanagement_backend.enums.InvitationStatus;
 import com.example.taskmanagement_backend.repositories.*;
 
+import com.example.taskmanagement_backend.services.infrastructure.ConcurrentTaskService;
+import com.example.taskmanagement_backend.services.infrastructure.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class ProjectInvitationService {
     private final UserJpaRepository userRepository;
     private final EmailService emailService;
     private  final RoleJpaRepository roleRepository;
+    private final ConcurrentTaskService concurrentTaskService;
 
     public ProjectInvitationResponseDto createInvitation(CreateProjectInvitationRequestDto dto) throws MessagingException {
         Project project = projectRepository.findById(dto.getProjectId())
@@ -53,10 +56,20 @@ public class ProjectInvitationService {
 
         invitationRepository.save(invitation);
         // Tạo link accept
-        String inviteLink = "localhost:8080/api/invitations/accept?token=" + invitation.getToken();
+        String inviteLink = "localhost:8080/api/invitations/accept-project?token=" + invitation.getToken();
 
-        // Gửi email
-        emailService.sendInvitationEmail(dto.getEmail(), invitation.getProject().getName(), inviteLink);
+        // Gửi email chạy bất đồng bộ
+        concurrentTaskService.executeTask(() -> {
+            try {
+                emailService.sendInvitationEmail(
+                        dto.getEmail(),
+                        invitation.getProject().getName(),
+                        inviteLink
+                );
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        });
         return toDto(invitation);
     }
 

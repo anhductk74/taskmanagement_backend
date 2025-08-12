@@ -3,7 +3,7 @@ package com.example.taskmanagement_backend.filters;
 
 import java.io.IOException;
 
-import com.example.taskmanagement_backend.services.JwtService;
+import com.example.taskmanagement_backend.services.infrastructure.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

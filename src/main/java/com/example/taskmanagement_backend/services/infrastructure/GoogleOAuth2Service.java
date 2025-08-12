@@ -1,4 +1,4 @@
-package com.example.taskmanagement_backend.services;
+package com.example.taskmanagement_backend.services.infrastructure;
 
 import com.example.taskmanagement_backend.dtos.OAuth2Dto.GoogleAuthUrlResponseDto;
 import com.example.taskmanagement_backend.dtos.OAuth2Dto.TokenResponseDto;
@@ -14,6 +14,7 @@ import com.example.taskmanagement_backend.repositories.RoleJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserProfileRepository;
 
+import com.example.taskmanagement_backend.services.OrganizationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

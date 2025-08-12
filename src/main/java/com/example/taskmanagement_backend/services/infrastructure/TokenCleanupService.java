@@ -1,4 +1,4 @@
-package com.example.taskmanagement_backend.services;
+package com.example.taskmanagement_backend.services.infrastructure;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
