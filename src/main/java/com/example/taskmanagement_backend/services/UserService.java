@@ -12,10 +12,8 @@ import com.example.taskmanagement_backend.repositories.OrganizationJpaRepository
 import com.example.taskmanagement_backend.repositories.RoleJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserProfileRepository;
-import jakarta.persistence.Cacheable;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.taskmanagement_backend.services.infrastructure.JwtService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
@@ -158,6 +156,7 @@ public class UserService {
     }
 
     @CachePut(value = "users", key = "#userId")
+    @CacheEvict(value = "users", key = "#allUsers")
     public UserResponseDto updateUserRoles(Long userId, Set<Long> roleIds) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));

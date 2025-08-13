@@ -1,7 +1,7 @@
 package com.example.taskmanagement_backend.controllers;
 
-import com.example.taskmanagement_backend.services.JwtTokenService;
-import com.example.taskmanagement_backend.services.TokenCleanupService;
+import com.example.taskmanagement_backend.services.infrastructure.JwtTokenService;
+import com.example.taskmanagement_backend.services.infrastructure.TokenCleanupService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

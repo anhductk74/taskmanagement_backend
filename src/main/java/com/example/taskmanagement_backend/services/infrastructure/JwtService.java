@@ -1,19 +1,15 @@
-package com.example.taskmanagement_backend.services;
+package com.example.taskmanagement_backend.services.infrastructure;
 
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
 import com.example.taskmanagement_backend.dtos.UserProfileDto.UserProfileResponseDto;
-import com.example.taskmanagement_backend.entities.Role;
 import com.example.taskmanagement_backend.entities.User;
-import com.example.taskmanagement_backend.entities.UserProfile;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 

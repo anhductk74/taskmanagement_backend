@@ -5,13 +5,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateUserRequestDto {
+public class CreateUserRequestDto implements Serializable {
 
     @NotBlank
     @Email
@@ -19,7 +20,6 @@ public class CreateUserRequestDto {
 
     @NotBlank
     private String password;
-
 
     @NotNull
     private List<Long> roleIds;

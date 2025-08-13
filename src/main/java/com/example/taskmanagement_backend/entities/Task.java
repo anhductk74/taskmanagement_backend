@@ -35,6 +35,7 @@ public class Task {
     @Column(name = "start_date")
     private LocalDate startDate;
 
+
     private LocalDate deadline;
 
     @Column(name = "created_at")
