@@ -23,6 +23,7 @@ public class Notification {
     private String content;
 
     @Column(name = "is_read")
+    @Builder.Default
     private Boolean isRead = false;
 
     @Column(name = "created_at")
