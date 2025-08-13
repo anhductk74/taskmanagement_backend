@@ -22,6 +22,7 @@
         private String name;
 
         @ManyToMany(mappedBy = "permissions")
+        @Builder.Default
         private Set<Role> roles = new HashSet<>();
 
     }

@@ -1,71 +1,8 @@
-# 🚀 TaskFlow - Modern Task Management System
-
-A comprehensive task management platform built with **Spring Boot** backend and **Next.js** frontend, featuring Google OAuth2 authentication, role-based access control, and real-time task collaboration.
-
-## ✨ Features
-
-### 🔐 Authentication & Authorization
-- **Google OAuth2 Integration** - Seamless login with Google accounts
-- **JWT Token Authentication** - Secure stateless authentication
-- **Role-Based Access Control** - OWNER, ADMIN, PROJECT_MANAGER, MEMBER, LEADER roles
-- **Organization Management** - Auto-create organizations based on email domains
-
-### 📋 Task Management
-- **CRUD Operations** - Create, read, update, delete tasks
-- **Task Status Tracking** - TODO, IN_PROGRESS, DONE, TESTING, BLOCKED, REVIEW
-- **Priority Levels** - LOW, MEDIUM, HIGH priority assignments
-- **Due Date Management** - Set and track task deadlines
-- **Task Assignment** - Assign tasks to team members
-- **Bulk Operations** - Update multiple tasks simultaneously
-
-### 👥 Team Collaboration
-- **Project Organization** - Group tasks by projects
-- **Team Management** - Organize users into teams
-- **Multi-user Assignment** - Assign tasks to multiple users
-- **Activity Tracking** - Monitor task changes and updates
-
-### 📊 Analytics & Reporting
-- **Task Statistics** - Real-time dashboard with task metrics
-- **Progress Tracking** - Monitor project and team progress
-- **Overdue Alerts** - Track and highlight overdue tasks
-
-## 🛠️ Tech Stack
-
-### Backend
-- **Java 21** - Modern Java features and performance
-- **Spring Boot 3.5.4** - Enterprise-grade framework
-- **Spring Security** - Authentication and authorization
-- **Spring Data JPA** - Database abstraction layer
-- **MySQL** - Relational database
-- **JWT (jsonwebtoken)** - Token-based authentication
-- **Google OAuth2** - Social authentication
-- **Swagger/OpenAPI** - API documentation
-
-### Frontend
-- **Next.js** - React framework with SSR/SSG
-- **TypeScript** - Type-safe development
-- **Axios** - HTTP client for API calls
-- **SWR** - Data fetching and caching
-- **Tailwind CSS** - Utility-first styling
-
-### DevOps & Tools
-- **Gradle** - Build automation
-- **Docker** - Containerization (optional)
-- **dotenv-java** - Environment variable management
-- **Hibernate** - ORM framework
-
-## 🚀 Quick Start
-
-### Prerequisites
-- **Java 21+** installed
-- **Node.js 18+** and npm/yarn
-- **MySQL 5.7+** running on localhost:3306
-- **Google OAuth2 credentials** (see setup guide)
 
 
-## 📚 API Documentation & Implementation Status
+## API Documentation & Implementation Status
 
-### 🔐 Authentication & OAuth2 APIs
+### Authentication & OAuth2 APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `POST` | `/api/auth/login` | Traditional email/password login | ✅ (Done) |
@@ -77,7 +14,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `GET` | `/api/auth/google/validate` | Validate OAuth2 state | ✅ (Done) |
 | `GET` | `/api/auth/me` | Get current user info | ❌ (Planned) |
 
-### 📋 Task Management APIs
+### Task Management APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `GET` | `/api/tasks` | Get all tasks | ✅ (Done) |
@@ -91,7 +28,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `GET` | `/api/tasks/stats` | Get task statistics | ❌ (Planned) |
 | `PATCH` | `/api/tasks/bulk-update` | Bulk update tasks | ❌ (Planned) |
 
-### 📝 Task Checklist APIs
+### Task Checklist APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `POST` | `/api/task-checklists` | Create task checklist | ✅ (Done) |
@@ -101,7 +38,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `DELETE` | `/api/task-checklists/{id}` | Delete checklist | ✅ (Done) |
 | `GET` | `/api/task-checklists/task/{taskId}` | Get checklists by task | ✅ (Done) |
 
-### 📎 Task Attachment APIs
+### Task Attachment APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `POST` | `/api/task-attachments` | Upload task attachment | ✅ (Done) |
@@ -111,7 +48,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `DELETE` | `/api/task-attachments/{id}` | Delete attachment | ✅ (Done) |
 | `GET` | `/api/task-attachments/task/{taskId}` | Get attachments by task | ✅ (Done) |
 
-### 👥 User Management APIs
+### User Management APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `POST` | `/api/users` | Create new user | ✅ (Done) |
@@ -123,7 +60,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `PATCH` | `/api/users/{id}/role` | Update user role | ❌ (Planned) |
 | `PATCH` | `/api/users/{id}/status` | Update user status | ❌ (Planned) |
 
-### 👤 User Profile APIs
+### User Profile APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `GET` | `/api/user-profiles/{id}` | Get user profile | ✅ (Done) |
@@ -131,7 +68,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `POST` | `/api/user-profiles` | Create user profile | ❌ (Planned) |
 | `DELETE` | `/api/user-profiles/{id}` | Delete user profile | ❌ (Planned) |
 
-### 🏢 Organization Management APIs
+### Organization Management APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `GET` | `/api/organizations` | Get all organizations | ✅ (Done) |
@@ -154,7 +91,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `GET` | `/api/projects/{id}/members` | Get project members | ❌ (Planned) |
 | `POST` | `/api/projects/{id}/members` | Add project member | ❌ (Planned) |
 
-### 👥 Team Management APIs
+### Team Management APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `GET` | `/api/teams` | Get all teams | ✅ (Done) |
@@ -166,7 +103,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `POST` | `/api/teams/{id}/members` | Add team member | ❌ (Planned) |
 | `DELETE` | `/api/teams/{id}/members/{userId}` | Remove team member | ❌ (Planned) |
 
-### 📅 Calendar Integration APIs
+### Calendar Integration APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `POST` | `/api/calendar-integrations` | Create calendar integration | ✅ (Done) |
@@ -177,7 +114,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `GET` | `/api/calendar-integrations/user/{userId}` | Get user integrations | ✅ (Done) |
 | `POST` | `/api/calendar-integrations/sync` | Sync with external calendar | ❌ (Planned) |
 
-### 📊 Analytics & Reporting APIs
+### Analytics & Reporting APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `GET` | `/api/analytics/tasks/stats` | Get task statistics | ❌ (Planned) |
@@ -185,7 +122,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `GET` | `/api/analytics/users/activity` | Get user activity | ❌ (Planned) |
 | `GET` | `/api/analytics/dashboard` | Get dashboard data | ❌ (Planned) |
 
-### 🔧 Token Management APIs
+###  Token Management APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `GET` | `/api/tokens/stats` | Get token statistics | ✅ (Done) |
@@ -194,7 +131,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `POST` | `/api/tokens/limit-per-user` | Limit tokens per user | ✅ (Done) |
 | `GET` | `/api/tokens/health` | Token system health check | ✅ (Done) |
 
-### 📋 Audit Log APIs
+### Audit Log APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `POST` | `/api/audit-logs` | Create audit log | ✅ (Done) |
@@ -203,7 +140,7 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 | `DELETE` | `/api/audit-logs/{id}` | Delete audit log | ✅ (Done) |
 | `GET` | `/api/audit-logs/user/{userId}` | Get user audit logs | ✅ (Done) |
 
-### 🔮 Planned Future APIs
+###  Planned Future APIs
 | Method | Endpoint | Description | Status |
 |--------|----------|-------------|--------|
 | `GET` | `/api/notifications` | Get user notifications | ❌ (Planned) |
@@ -219,47 +156,5 @@ A comprehensive task management platform built with **Spring Boot** backend and 
 
 
 
-**Full API Documentation**: `http://localhost:8080/swagger-ui.html`
 
-## 🏗️ Project Structure
 
-```
-taskflow/
-├── backend/                          # Spring Boot Backend
-│   ├── src/main/java/
-│   │   ├── controllers/             # REST API Controllers
-│   │   ├── services/                # Business Logic
-│   │   ├── repositories/            # Data Access Layer
-│   │   ├── entities/                # JPA Entities
-│   │   ├── dtos/                    # Data Transfer Objects
-│   │   ├── config/                  # Configuration Classes
-│   │   ├── filters/                 # Security Filters
-│   │   └── exceptions/              # Exception Handlers
-│   ├── src/main/resources/
-│   │   ├── application.properties   # Spring Configuration
-│   │   └── data.sql                # Initial Data
-│   ├── .env                        # Environment Variables
-│   └── build.gradle                # Build Configuration
-├── frontend/                        # Next.js Frontend
-│   ├── src/
-│   │   ├── components/             # React Components
-│   │   ├── pages/                  # Next.js Pages
-│   │   ├── services/               # API Services
-│   │   ├── hooks/                  # Custom React Hooks
-│   │   └── utils/                  # Utility Functions
-│   ├── .env.local                  # Frontend Environment
-│   └── package.json                # Dependencies
-└── docs/                           # Documentation
-    ├── GOOGLE_OAUTH2_SETUP.md      # OAuth2 Setup Guide
-    ├── ENVIRONMENT_SETUP.md        # Environment Configuration
-    └── API_DOCUMENTATION.md        # API Reference
-```
-
-## 🔒 Security Features
-
-- **JWT Authentication** with access and refresh tokens
-- **Role-based authorization** with granular permissions
-- **CORS Configuration** for cross-origin requests
-- **SQL Injection Protection** via JPA/Hibernate
-- **XSS Protection** with proper input validation
-- **Secure Password Handling** (OAuth2 users have no passwords)

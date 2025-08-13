@@ -26,11 +26,15 @@ public class Task {
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    private TaskStatus status;
+    @Column(name = "status_key")
+    private String statusKey; // References user's custom status configuration
 
-    @Enumerated(EnumType.STRING)
-    private TaskPriority priority;
+    @Column(name = "priority_key")
+    private String priorityKey; // References user's custom priority configuration
+
+    @Column(name = "start_date")
+    private LocalDate startDate;
+
 
     private LocalDate deadline;
 

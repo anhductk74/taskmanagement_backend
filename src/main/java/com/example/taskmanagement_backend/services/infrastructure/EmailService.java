@@ -1,4 +1,4 @@
-package com.example.taskmanagement_backend.services;
+package com.example.taskmanagement_backend.services.infrastructure;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

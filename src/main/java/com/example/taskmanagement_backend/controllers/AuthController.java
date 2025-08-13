@@ -4,7 +4,7 @@ import com.example.taskmanagement_backend.dtos.OAuth2Dto.RefreshTokenRequestDto;
 import com.example.taskmanagement_backend.dtos.OAuth2Dto.TokenResponseDto;
 import com.example.taskmanagement_backend.dtos.UserDto.LoginRequestDto;
 import com.example.taskmanagement_backend.dtos.UserDto.LoginResponseDto;
-import com.example.taskmanagement_backend.services.TokenRefreshService;
+import com.example.taskmanagement_backend.services.infrastructure.TokenRefreshService;
 import com.example.taskmanagement_backend.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

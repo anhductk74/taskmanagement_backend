@@ -2,6 +2,7 @@ package com.example.taskmanagement_backend.dtos.UserDto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 //@Data
@@ -24,7 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserResponseDto {
+public class UserResponseDto implements Serializable {
 
     private Long id;
 

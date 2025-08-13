@@ -24,6 +24,8 @@ public class CreateTaskRequestDto {
     @NotBlank(message = "Priority is required")
     private String priority;
 
+    private LocalDate startDate;
+
     private LocalDate deadline;
 
     // Không bắt buộc nữa

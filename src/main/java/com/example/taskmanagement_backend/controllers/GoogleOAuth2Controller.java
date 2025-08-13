@@ -2,7 +2,7 @@ package com.example.taskmanagement_backend.controllers;
 
 import com.example.taskmanagement_backend.dtos.OAuth2Dto.GoogleAuthUrlResponseDto;
 import com.example.taskmanagement_backend.dtos.OAuth2Dto.TokenResponseDto;
-import com.example.taskmanagement_backend.services.GoogleOAuth2Service;
+import com.example.taskmanagement_backend.services.infrastructure.GoogleOAuth2Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;

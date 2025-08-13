@@ -26,6 +26,8 @@ public class TeamMember {
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_teammember_user"))
     private User user;
 
+    private Long roleId;
+
     @Column(name = "joined_at")
     private LocalDateTime joinedAt;
 }
