@@ -1,6 +1,6 @@
 
 
-## 📚 API Documentation & Implementation Status
+## API Documentation & Implementation Status
 
 ### Authentication & OAuth2 APIs
 | Method | Endpoint | Description | Status |

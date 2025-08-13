@@ -20,6 +20,8 @@ public class UpdateTaskRequestDto {
 
     private String priority;
 
+    private LocalDate startDate;
+
     private LocalDate deadline;
 
     private List<Long> assignedToIds;

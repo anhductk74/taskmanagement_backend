@@ -23,6 +23,8 @@ public class TaskResponseDto {
 
     private String priority;
 
+    private LocalDate startDate;
+
     private LocalDate deadline;
 
     private LocalDateTime createdAt;

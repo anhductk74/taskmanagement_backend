@@ -29,10 +29,12 @@ public class ProjectInvitation {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private InvitationStatus status = InvitationStatus.PENDING;
 
     private String token;
 
     @Column(name = "created_at")
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }

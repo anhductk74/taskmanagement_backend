@@ -29,6 +29,7 @@ public class TeamInvitation {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    @Builder.Default
     private InvitationStatus status = InvitationStatus.PENDING;
 
     private String token;
