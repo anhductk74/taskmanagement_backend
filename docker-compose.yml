@@ -6,6 +6,8 @@ services:
     image: anhductk74/taskmanagement_backend:latest
     ports:
       - '8080:8080'
+    env_file:
+      - .env
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db_taskmanagement
       SPRING_DATASOURCE_USERNAME: developer

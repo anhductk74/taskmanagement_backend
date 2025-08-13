@@ -52,7 +52,12 @@ public class SecurityConfig {
                         .requestMatchers("/api/public/**").permitAll()
 
                         // Swagger docs
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-ui/index.html"
+                        ).permitAll()
 
                         // User & Organization registration
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
