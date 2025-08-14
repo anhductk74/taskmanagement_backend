@@ -2,14 +2,12 @@ package com.example.taskmanagement_backend.services;
 
 import com.example.taskmanagement_backend.dtos.ProjectMemberDto.CreateProjectMemberRequestDto;
 import com.example.taskmanagement_backend.dtos.ProjectMemberDto.ProjectMemberResponseDto;
-import com.example.taskmanagement_backend.dtos.ProjectMemberDto.UpdateProjectMemberRequestDto;
 import com.example.taskmanagement_backend.entities.Project;
 import com.example.taskmanagement_backend.entities.ProjectMember;
 import com.example.taskmanagement_backend.entities.User;
 import com.example.taskmanagement_backend.repositories.ProjectJpaRepository;
 import com.example.taskmanagement_backend.repositories.ProjectMemberJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserJpaRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +42,6 @@ public class ProjectMemberService {
         ProjectMember projectMember = ProjectMember.builder()
                 .project(project)
                 .user(user)
-                .roleId(dto.getRoleId())
                 .joinedAt(LocalDateTime.now())
                 .build();
 
@@ -56,20 +53,12 @@ public class ProjectMemberService {
         }
         projectMemberJpaRepository.deleteById(id);
     }
-    public ProjectMemberResponseDto updateProjectMember(Long id, UpdateProjectMemberRequestDto dto) {
-        ProjectMember projectMember = projectMemberJpaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Project member not found with id: " + id));
 
-        projectMember.setRoleId(dto.getRoleId());
-
-        return convertToDto(projectMemberJpaRepository.save(projectMember));
-    }
     private ProjectMemberResponseDto convertToDto(ProjectMember entity) {
         return ProjectMemberResponseDto.builder()
                 .id(entity.getId())
                 .projectId(entity.getProject().getId())
                 .userId(entity.getUser().getId())
-                .roleId(entity.getRoleId())
                 .joinedAt(entity.getJoinedAt())
                 .build();
     }

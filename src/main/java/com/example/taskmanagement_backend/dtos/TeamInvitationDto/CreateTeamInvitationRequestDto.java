@@ -14,9 +14,6 @@ public class CreateTeamInvitationRequestDto {
     @NotNull(message = "teamId không được để trống")
     private Long teamId;
 
-    @NotNull(message = "Role Id not null")
-    private Long roleId;
-
     @NotNull(message = "invitedById không được để trống")
     private Long invitedById;
 }

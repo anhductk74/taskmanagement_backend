@@ -32,10 +32,6 @@ public class TeamInvitation {
     @Builder.Default
     private InvitationStatus status = InvitationStatus.PENDING;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
-
     private String token;
 
     @Column(name = "created_at", updatable = false)

@@ -2,7 +2,6 @@ package com.example.taskmanagement_backend.controllers;
 
 import com.example.taskmanagement_backend.dtos.ProjectMemberDto.CreateProjectMemberRequestDto;
 import com.example.taskmanagement_backend.dtos.ProjectMemberDto.ProjectMemberResponseDto;
-import com.example.taskmanagement_backend.dtos.ProjectMemberDto.UpdateProjectMemberRequestDto;
 import com.example.taskmanagement_backend.services.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +25,12 @@ public class ProjectMemberController {
     public ResponseEntity<ProjectMemberResponseDto> createMember(@RequestBody CreateProjectMemberRequestDto dto) {
         return ResponseEntity.ok(projectMemberService.createProjectMember(dto));
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<ProjectMemberResponseDto> updateMember(
-            @PathVariable Long id,
-            @RequestBody UpdateProjectMemberRequestDto dto) {
-        return ResponseEntity.ok(projectMemberService.updateProjectMember(id, dto));
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<ProjectMemberResponseDto> updateMember(
+//            @PathVariable Long id,
+//            @RequestBody UpdateProjectMemberRequestDto dto) {
+//        return ResponseEntity.ok(projectMemberService.updateProjectMember(id, dto));
+//    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id) {
         projectMemberService.deleteProjectMember(id);

@@ -37,14 +37,11 @@ public class TeamInvitationService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
         User userInvite = userJpaRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("User được mời không tồn tại"));
-        Role role = roleJpaRepository.findById(dto.getRoleId())
-                .orElseThrow(()-> new EntityNotFoundException("User không tồn tại"));
         TeamInvitation invitation = TeamInvitation.builder()
                 .email(dto.getEmail())
                 .team(team)
                 .invitedBy(invitedBy)
                 .status(InvitationStatus.PENDING)
-                .role(role)
                 .token(java.util.UUID.randomUUID().toString())
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -86,7 +83,6 @@ public class TeamInvitationService {
         TeamMember member = TeamMember.builder()
                 .team(invitation.getTeam())
                 .user(user)
-                .roleId(invitation.getRole().getId())
                 .joinedAt(LocalDateTime.now())
                 .build();
 
