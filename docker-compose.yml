@@ -1,6 +1,3 @@
-# docker-compose.yml
-# This file is used to define and run multi-container Docker applications.
-# It sets up a Spring Boot application with a MySQL database.
 services:
   app:
     image: anhductk74/taskmanagement_backend:latest
@@ -12,9 +9,15 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/db_taskmanagement
       SPRING_DATASOURCE_USERNAME: developer
       SPRING_DATASOURCE_PASSWORD: developer_password
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_PASSWORD: redis_password
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+
   db:
     image: mysql:latest
     restart: always
@@ -28,12 +31,12 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
-      # This healthcheck ensures that the MySQL service is ready before the app starts.
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p123456']
       timeout: 20s
       retries: 10
       interval: 10s
       start_period: 30s
+
   redis:
     image: redis:latest
     container_name: redis
@@ -45,11 +48,12 @@ services:
       - redis_data:/data
     command: [ 'redis-server', '--requirepass', 'redis_password' ]
     healthcheck:
-      test: [ "CMD", "redis-cli", "-a", "redis_password", "ping" ]
+      test: [ "CMD", "redis-cli", "-a", "redis_password", "--raw", "ping" ]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
+
 volumes:
   db_data:
   redis_data:
