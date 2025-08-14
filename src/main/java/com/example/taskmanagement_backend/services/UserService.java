@@ -16,6 +16,7 @@ import com.example.taskmanagement_backend.services.infrastructure.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -142,10 +143,12 @@ public class UserService {
         userRepository.save(user);
     }
 
-    //    @Cacheable(value = "users", key = "#id")
+    @Cacheable(value = "users", key = "#id")
     public UserResponseDto getUserById(Long id) {
+        System.out.println("📌 Load DB");
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
         return convertToDto(user);
+       // return user;
     }
 
     public List<UserResponseDto> getAllUsers() {

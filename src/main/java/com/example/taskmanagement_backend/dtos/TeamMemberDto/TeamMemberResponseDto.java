@@ -19,7 +19,5 @@ public class TeamMemberResponseDto {
 
     private Long userId;
 
-    private Long roleId;
-
     private LocalDateTime joinedAt;
 }

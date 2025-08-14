@@ -1,15 +1,10 @@
 package com.example.taskmanagement_backend.services;
 
-import com.example.taskmanagement_backend.dtos.ProjectMemberDto.ProjectMemberResponseDto;
-import com.example.taskmanagement_backend.dtos.ProjectMemberDto.UpdateProjectMemberRequestDto;
 import com.example.taskmanagement_backend.dtos.TeamMemberDto.CreateTeamMemberRequestDto;
 import com.example.taskmanagement_backend.dtos.TeamMemberDto.TeamMemberResponseDto;
-import com.example.taskmanagement_backend.dtos.TeamMemberDto.UpdateTeamMemberRequestDto;
-import com.example.taskmanagement_backend.entities.ProjectMember;
 import com.example.taskmanagement_backend.entities.Team;
 import com.example.taskmanagement_backend.entities.TeamMember;
 import com.example.taskmanagement_backend.entities.User;
-import com.example.taskmanagement_backend.repositories.ProjectJpaRepository;
 
 import com.example.taskmanagement_backend.repositories.TeamJpaRepository;
 import com.example.taskmanagement_backend.repositories.TeamMemberJpaRepository;
@@ -19,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,7 +40,6 @@ public class TeamMemberService {
         TeamMember teamMember = TeamMember.builder()
                 .team(team)
                 .user(user)
-                .roleId(dto.getRoleId())
                 .joinedAt(LocalDateTime.now())
                 .build();
         return  convertToDto(teamMemberJpaRepository.save(teamMember));
@@ -59,21 +52,12 @@ public class TeamMemberService {
         }
         teamMemberJpaRepository.deleteById(id);
     }
-    public TeamMemberResponseDto updateTeamMember(Long id, UpdateTeamMemberRequestDto dto) {
-        TeamMember teamMember = teamMemberJpaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Team member not found with id: " + id));
-
-        teamMember.setRoleId(dto.getRoleId());
-
-        return convertToDto(teamMemberJpaRepository.save(teamMember));
-    }
 
     private TeamMemberResponseDto convertToDto(TeamMember entity) {
         return TeamMemberResponseDto.builder()
                 .id(entity.getId())
                 .teamId(entity.getTeam().getId())
                 .userId(entity.getUser().getId())
-                .roleId(entity.getRoleId())
                 .joinedAt(entity.getJoinedAt())
                 .build();
     }

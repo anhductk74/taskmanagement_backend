@@ -16,7 +16,5 @@ public class ProjectMemberResponseDto {
 
     private Long userId;
 
-    private Long roleId;
-
     private LocalDateTime joinedAt;
 }

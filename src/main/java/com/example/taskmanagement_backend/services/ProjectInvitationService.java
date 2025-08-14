@@ -6,6 +6,7 @@ import com.example.taskmanagement_backend.dtos.ProjectInvitatinDto.ProjectInvita
 import com.example.taskmanagement_backend.dtos.ProjectInvitatinDto.UpdateProjectInvitationStatusRequestDto;
 import com.example.taskmanagement_backend.entities.*;
 import com.example.taskmanagement_backend.enums.InvitationStatus;
+import com.example.taskmanagement_backend.events.ProjectInvitationCreatedEvent;
 import com.example.taskmanagement_backend.repositories.*;
 
 import com.example.taskmanagement_backend.services.infrastructure.ConcurrentTaskService;
@@ -13,6 +14,8 @@ import com.example.taskmanagement_backend.services.infrastructure.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,6 +32,8 @@ public class ProjectInvitationService {
     private final UserJpaRepository userRepository;
     private final EmailService emailService;
     private  final RoleJpaRepository roleRepository;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
     private final ConcurrentTaskService concurrentTaskService;
 
     public ProjectInvitationResponseDto createInvitation(CreateProjectInvitationRequestDto dto) throws MessagingException {
@@ -41,15 +46,11 @@ public class ProjectInvitationService {
         User userInvite = userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new EntityNotFoundException("User được mời không tồn tại"));
 
-        Role role = roleRepository.findById(dto.getRoleId())
-                .orElseThrow(()-> new EntityNotFoundException("User không tồn tại"));
-
         ProjectInvitation invitation = ProjectInvitation.builder()
                 .email(dto.getEmail())
                 .project(project)
                 .invitedBy(invitedBy)
                 .status(InvitationStatus.PENDING)
-                .role(role)
                 .token(java.util.UUID.randomUUID().toString())
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -70,6 +71,9 @@ public class ProjectInvitationService {
                 e.printStackTrace();
             }
         });
+//        eventPublisher.publishEvent(
+//                new ProjectInvitationCreatedEvent(this, dto.getEmail(), project.getName(), inviteLink)
+//        );
         return toDto(invitation);
     }
 
@@ -93,7 +97,6 @@ public class ProjectInvitationService {
         ProjectMember member = ProjectMember.builder()
                 .project(invitation.getProject())
                 .user(user)
-                .roleId(invitation.getRole().getId())
                 .joinedAt(LocalDateTime.now())
                 .build();
 
