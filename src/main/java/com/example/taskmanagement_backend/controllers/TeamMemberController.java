@@ -2,7 +2,6 @@ package com.example.taskmanagement_backend.controllers;
 
 import com.example.taskmanagement_backend.dtos.TeamMemberDto.CreateTeamMemberRequestDto;
 import com.example.taskmanagement_backend.dtos.TeamMemberDto.TeamMemberResponseDto;
-import com.example.taskmanagement_backend.dtos.TeamMemberDto.UpdateTeamMemberRequestDto;
 import com.example.taskmanagement_backend.services.TeamMemberService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +25,7 @@ public class TeamMemberController {
     public ResponseEntity<TeamMemberResponseDto> createMember(@RequestBody CreateTeamMemberRequestDto dto){
         return ResponseEntity.ok(teamMemberService.createTeamMember(dto));
     }
-    @PutMapping("/{id}")
-    public ResponseEntity<TeamMemberResponseDto> updateMember(@PathVariable Long id, @RequestBody UpdateTeamMemberRequestDto dto){
-        return ResponseEntity.ok(teamMemberService.updateTeamMember(id,dto));
-    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMember(@PathVariable Long id){
         return ResponseEntity.noContent().build();

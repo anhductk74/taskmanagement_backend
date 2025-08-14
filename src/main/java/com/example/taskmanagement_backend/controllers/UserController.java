@@ -3,6 +3,7 @@
     import com.example.taskmanagement_backend.dtos.UserDto.UpdateUserRequestDto;
     import com.example.taskmanagement_backend.dtos.UserDto.UserResponseDto;
 
+    import com.example.taskmanagement_backend.entities.User;
     import com.example.taskmanagement_backend.services.UserService;
     import jakarta.validation.Valid;
     import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@
         public ResponseEntity<UserResponseDto> getUserByEmail(@RequestParam("email") String email) {
             return ResponseEntity.ok(userService.getUserByEmail(email));
         }
-        @PreAuthorize("hasAnyRole('owner', 'pm', 'leader')")
+//        @PreAuthorize("hasAnyRole('owner', 'pm', 'leader')")
         @GetMapping
         public ResponseEntity<List<UserResponseDto>> getAllUsers() {
             return ResponseEntity.ok(userService.getAllUsers());
