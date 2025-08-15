@@ -29,8 +29,9 @@ public class CreateProjectRequestDto {
     @NotNull(message = "Owner ID is required")
     private Long ownerId;
 
-    @NotNull(message = "Project Manager ID is required")
-    private Long pmId;
+    @NotBlank(message = "Project Manager email is required")
+    @Email(message = "Invalid email format")
+    private String emailPm;
 
     @NotNull(message = "Organization ID is required")
     private Long organizationId;

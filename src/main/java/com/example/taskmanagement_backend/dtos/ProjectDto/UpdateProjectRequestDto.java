@@ -24,7 +24,7 @@ public class UpdateProjectRequestDto {
 
     private Long ownerId;
 
-    private Long pmId;
+    private String emailPm;
 
     private Long organizationId;
 }
