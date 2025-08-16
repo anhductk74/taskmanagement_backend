@@ -39,7 +39,7 @@ public class TeamService {
         return teamJpaRepository.findById(id).map(this::convertToDto).orElse(null);
     }
     public List<TeamResponseDto> findByProjectId(Long projectId) {
-        return teamJpaRepository.findByProject_Id(projectId).stream().map(this::convertToDto).collect(Collectors.toList());
+        return teamJpaRepository.findByProjectTeams_Project_Id(projectId).stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     public TeamResponseDto createTeams(CreateTeamResponseDto dto){

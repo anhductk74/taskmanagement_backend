@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface TeamJpaRepository extends JpaRepository<Team, Long> {
-    List<Team> findByProject_Id(Long projectId);
+    List<Team> findByProjectTeams_Project_Id(Long projectId);
 }
