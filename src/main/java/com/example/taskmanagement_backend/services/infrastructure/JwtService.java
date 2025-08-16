@@ -28,6 +28,9 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
+    @Value("${jwt.access-token.expiration}")
+    private long accessTokenExpiration;
+
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
@@ -52,8 +55,7 @@ public class JwtService {
         claims.put("userProfile", userProfileResponseDto);
         claims.put("type", "access_token"); // Token type identifier
 
-        long jwtExpiration = 86400000;
-        return createToken(claims, user.getEmail(), jwtExpiration);
+        return createToken(claims, user.getEmail(), accessTokenExpiration);
     }
 
     private Claims extractAllClaims(String token) {

@@ -4,9 +4,11 @@ import com.example.taskmanagement_backend.dtos.TeamDto.CreateTeamResponseDto;
 import com.example.taskmanagement_backend.dtos.TeamDto.TeamResponseDto;
 import com.example.taskmanagement_backend.dtos.TeamDto.UpdateTeamResponseDto;
 import com.example.taskmanagement_backend.entities.Project;
+import com.example.taskmanagement_backend.entities.ProjectTeam;
 import com.example.taskmanagement_backend.entities.Team;
 import com.example.taskmanagement_backend.entities.User;
 import com.example.taskmanagement_backend.repositories.ProjectJpaRepository;
+import com.example.taskmanagement_backend.repositories.ProjectTeamRepository;
 import com.example.taskmanagement_backend.repositories.TeamJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class TeamService {
     UserJpaRepository userJpaRepository;
     @Autowired
     ProjectJpaRepository projectJpaRepository;
+    @Autowired
+    ProjectTeamRepository projectTeamRepository;
 
     public List<TeamResponseDto> getAllTeams() {
         return teamJpaRepository.findAll().stream().map(this::convertToDto).collect(Collectors.toList());
@@ -42,22 +46,60 @@ public class TeamService {
         Team team = Team.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
-                .project(dto.getProject_id() != null ? getProject(dto.getProject_id()) : null)
                 .leader(dto.getLeader_id() != null ? getUser(dto.getLeader_id()) : null)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
-        return convertToDto(teamJpaRepository.save(team));
+        
+        Team savedTeam = teamJpaRepository.save(team);
+        
+        // If project_id is provided, create the ProjectTeam relationship
+        if (dto.getProject_id() != null) {
+            Project project = getProject(dto.getProject_id());
+            if (project != null) {
+                ProjectTeam projectTeam = ProjectTeam.builder()
+                        .project(project)
+                        .team(savedTeam)
+                        .build();
+                projectTeamRepository.save(projectTeam);
+            }
+        }
+        
+        return convertToDto(savedTeam);
     }
 
     public TeamResponseDto updateTeams(Long id, UpdateTeamResponseDto dto){
-        Team team = convertToEntity(getTeamById(id));
+        Optional<Team> teamOpt = teamJpaRepository.findById(id);
+        if (!teamOpt.isPresent()) {
+            return null;
+        }
+        
+        Team team = teamOpt.get();
         if(dto.getName() != null) team.setName(dto.getName());
         if(dto.getDescription() != null) team.setDescription(dto.getDescription());
-        if(dto.getProjectId() != null) team.setProject(getProject(dto.getProjectId()));
         if(dto.getLeaderId() != null) team.setLeader(getUser(dto.getLeaderId()));
         team.setUpdatedAt(LocalDateTime.now());
-        return convertToDto(teamJpaRepository.save(team));
+        
+        Team savedTeam = teamJpaRepository.save(team);
+        
+        // Handle project relationship update if provided
+        if(dto.getProjectId() != null) {
+            Project project = getProject(dto.getProjectId());
+            if (project != null) {
+                // Check if relationship already exists
+                Optional<ProjectTeam> existingRelation = projectTeamRepository.findByProjectIdAndTeamId(dto.getProjectId(), id);
+                if (!existingRelation.isPresent()) {
+                    // Create new relationship
+                    ProjectTeam projectTeam = ProjectTeam.builder()
+                            .project(project)
+                            .team(savedTeam)
+                            .build();
+                    projectTeamRepository.save(projectTeam);
+                }
+            }
+        }
+        
+        return convertToDto(savedTeam);
     }
 
     public boolean deleteTeamById(Long id) {
@@ -70,12 +112,16 @@ public class TeamService {
     }
 
     private TeamResponseDto convertToDto(Team team) {
+        // Get the first project this team is associated with (for backward compatibility)
+        List<ProjectTeam> projectTeams = projectTeamRepository.findByTeamId(team.getId());
+        Long projectId = projectTeams.isEmpty() ? null : projectTeams.get(0).getProject().getId();
+        
         return TeamResponseDto.builder()
                 .id(team.getId())
                 .name(team.getName())
                 .description(team.getDescription())
-                .projectId(team.getProject() != null ? team.getProject().getId() : null)
-                .leaderId(Long.valueOf(team.getLeader() != null ? team.getLeader().getId() : null))
+                .projectId(projectId)
+                .leaderId(team.getLeader() != null ? team.getLeader().getId() : null)
                 .createdAt(team.getCreatedAt())
                 .updatedAt(team.getUpdatedAt())
         .build();
@@ -86,7 +132,6 @@ public class TeamService {
                 .id(dto.getId())
                 .name(dto.getName())
                 .description(dto.getDescription())
-                .project(dto.getProjectId() != null ? getProject(dto.getProjectId()) : null)
                 .leader(dto.getLeaderId() != null ? getUser(dto.getLeaderId()) : null)
                 .createdAt(dto.getCreatedAt())
                 .updatedAt(dto.getUpdatedAt())

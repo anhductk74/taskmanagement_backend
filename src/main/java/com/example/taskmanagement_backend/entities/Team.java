@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Builder
@@ -22,9 +24,10 @@ public class Team {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "project_id", foreignKey = @ForeignKey(name = "fk_team_project"))
-    private Project project;
+    // Many-to-many relationship with projects through ProjectTeam
+    @Builder.Default
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProjectTeam> projectTeams = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "leader_id", foreignKey = @ForeignKey(name = "fk_team_leader"))

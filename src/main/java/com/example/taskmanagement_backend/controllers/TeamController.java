@@ -3,7 +3,11 @@ package com.example.taskmanagement_backend.controllers;
 import com.example.taskmanagement_backend.dtos.TeamDto.CreateTeamResponseDto;
 import com.example.taskmanagement_backend.dtos.TeamDto.TeamResponseDto;
 import com.example.taskmanagement_backend.dtos.TeamDto.UpdateTeamResponseDto;
+import com.example.taskmanagement_backend.dtos.ProcessDto.TeamProgressResponseDto;
+import com.example.taskmanagement_backend.dtos.TaskDto.TaskResponseDto;
 import com.example.taskmanagement_backend.services.TeamService;
+import com.example.taskmanagement_backend.services.TeamProgressService;
+import com.example.taskmanagement_backend.services.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +20,12 @@ import java.util.List;
 public class TeamController {
     @Autowired
     private TeamService teamService;
+    
+    @Autowired
+    private TeamProgressService teamProgressService;
+    
+    @Autowired
+    private TaskService taskService;
 
     @GetMapping
     public List<TeamResponseDto> findAll() {
@@ -47,6 +57,38 @@ public class TeamController {
     @GetMapping("/project/{projectId}")
     public List<TeamResponseDto> getTeamsByProjectId(@PathVariable Long projectId) {
         return teamService.findByProjectId(projectId);
+    }
+
+    // Team Progress Endpoints
+    @GetMapping("/{id}/progress")
+    public ResponseEntity<TeamProgressResponseDto> getTeamProgress(@PathVariable Long id) {
+        try {
+            TeamProgressResponseDto progress = teamProgressService.getTeamProgressByTeamId(id);
+            return ResponseEntity.ok(progress);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/{id}/progress")
+    public ResponseEntity<TeamProgressResponseDto> refreshTeamProgress(@PathVariable Long id) {
+        try {
+            TeamProgressResponseDto progress = teamProgressService.getTeamProgressByTeamId(id);
+            return ResponseEntity.ok(progress);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Team Tasks Endpoint
+    @GetMapping("/{id}/tasks")
+    public ResponseEntity<List<TaskResponseDto>> getTeamTasks(@PathVariable Long id) {
+        try {
+            List<TaskResponseDto> tasks = taskService.getTasksByTeamId(id);
+            return ResponseEntity.ok(tasks);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

@@ -303,6 +303,70 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
+    // ✅ REUSABLE: Get all tasks in a project (across all teams)
+    public List<TaskResponseDto> getTasksByProjectId(Long projectId) {
+        // Verify project exists
+        Project project = projectJpaRepository.findById(projectId)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found with id: " + projectId));
+
+        // Get current authenticated user for security check
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new SecurityException("User not authenticated");
+        }
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String currentUserEmail = userDetails.getUsername();
+        
+        User currentUser = userJpaRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new EntityNotFoundException("Current user not found"));
+
+        // Get tasks by project
+        List<Task> tasks = taskRepository.findByProjectId(projectId);
+        
+        // Filter tasks based on user permissions
+        List<Task> accessibleTasks = tasks.stream()
+                .filter(task -> canUserAccessTask(currentUser, task, userDetails))
+                .collect(Collectors.toList());
+
+        System.out.println("🎯 PROJECT TASKS: User " + currentUserEmail + " accessing " + 
+                          accessibleTasks.size() + " tasks in project " + projectId);
+
+        return accessibleTasks.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    // ✅ REUSABLE: Get all tasks of a team (across all projects)
+    public List<TaskResponseDto> getTasksByTeamId(Long teamId) {
+        // Verify team exists
+        Team team = teamJpaRepository.findById(teamId)
+                .orElseThrow(() -> new EntityNotFoundException("Team not found with id: " + teamId));
+
+        // Get current authenticated user for security check
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new SecurityException("User not authenticated");
+        }
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String currentUserEmail = userDetails.getUsername();
+        
+        User currentUser = userJpaRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new EntityNotFoundException("Current user not found"));
+
+        // Get tasks by team
+        List<Task> tasks = taskRepository.findByTeamId(teamId);
+        
+        // Filter tasks based on user permissions
+        List<Task> accessibleTasks = tasks.stream()
+                .filter(task -> canUserAccessTask(currentUser, task, userDetails))
+                .collect(Collectors.toList());
+
+        System.out.println("🎯 TEAM TASKS: User " + currentUserEmail + " accessing " + 
+                          accessibleTasks.size() + " tasks in team " + teamId);
+
+        return accessibleTasks.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
     private TaskResponseDto mapToDto(Task task) {
         return TaskResponseDto.builder()
                 .id(task.getId())
