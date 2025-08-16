@@ -362,6 +362,7 @@ public class TaskService {
         return MyTaskSummaryDto.builder()
                 .id(task.getId())
                 .title(task.getTitle())
+                .description(task.getDescription())
                 .status(task.getStatusKey())
                 .priority(task.getPriorityKey())
                 .startDate(task.getStartDate())
