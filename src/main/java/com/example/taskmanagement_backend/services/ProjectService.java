@@ -38,13 +38,15 @@ public class ProjectService {
     }
 
     public ProjectResponseDto createProject(CreateProjectRequestDto dto) {
+        User pmUser = userRepo.findByEmail(dto.getEmailPm())
+                .orElseThrow(() -> new RuntimeException("Project Manager not found with email: " + dto.getEmailPm()));
         Project project = Project.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
                 .owner(dto.getOwnerId() != null ? getUser(dto.getOwnerId()) : null)
-                .projectManager(dto.getPmId() != null ? getUser(dto.getPmId()) : null)
+                .projectManager(pmUser)
                 .organization(dto.getOrganizationId() != null ? getOrg(dto.getOrganizationId()) : null)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
@@ -60,7 +62,11 @@ public class ProjectService {
         if (dto.getStartDate() != null) project.setStartDate(dto.getStartDate());
         if (dto.getEndDate() != null) project.setEndDate(dto.getEndDate());
         if (dto.getOwnerId() != null) project.setOwner(getUser(dto.getOwnerId()));
-        if (dto.getPmId() != null) project.setProjectManager(getUser(dto.getPmId()));
+        if (dto.getEmailPm() != null) {
+            User pmUser = userRepo.findByEmail(dto.getEmailPm())
+                    .orElseThrow(() -> new RuntimeException("Project Manager not found with email: " + dto.getEmailPm()));
+            project.setProjectManager(pmUser);
+        }
         if (dto.getOrganizationId() != null) project.setOrganization(getOrg(dto.getOrganizationId()));
         if (dto.getStatus() != null) project.setStatus(dto.getStatus());
         project.setUpdatedAt(LocalDateTime.now());
