@@ -8,6 +8,7 @@ import com.example.taskmanagement_backend.entities.User;
 import com.example.taskmanagement_backend.entities.UserProfile;
 import com.example.taskmanagement_backend.exceptions.DuplicateEmailException;
 import com.example.taskmanagement_backend.exceptions.HttpException;
+import jakarta.persistence.EntityNotFoundException;
 import com.example.taskmanagement_backend.repositories.OrganizationJpaRepository;
 import com.example.taskmanagement_backend.repositories.RoleJpaRepository;
 import com.example.taskmanagement_backend.repositories.UserJpaRepository;
@@ -65,6 +66,17 @@ public class UserService {
 
 
     @CachePut(value = "users", key = "#result.id")
+    /**
+     * Get current user data for NextAuth integration
+     * Consolidates multiple auth calls into single endpoint
+     */
+    public UserResponseDto getCurrentUserData(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with email: " + email));
+
+        return convertToDto(user);
+    }
+
     public UserResponseDto createUser(CreateUserRequestDto dto) {
         // Lấy role
         if (userRepository.existsByEmail(dto.getEmail())) {
