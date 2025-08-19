@@ -4,7 +4,7 @@ import com.example.taskmanagement_backend.dtos.TaskDto.CreateTaskRequestDto;
 import com.example.taskmanagement_backend.dtos.TaskDto.TaskResponseDto;
 import com.example.taskmanagement_backend.dtos.TaskDto.UpdateTaskRequestDto;
 import com.example.taskmanagement_backend.dtos.TaskDto.MyTaskSummaryDto;
-import com.example.taskmanagement_backend.services.TaskService;
+import com.example.taskmanagement_backend.services.TaskServiceCached;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,7 +19,7 @@ import java.util.Map;
 public class TaskController {
 
     @Autowired
-    private TaskService taskService;
+    private TaskServiceCached taskService;
 
     @PostMapping
     public ResponseEntity<TaskResponseDto> createTask(@Valid @RequestBody CreateTaskRequestDto dto) {
@@ -47,6 +47,7 @@ public class TaskController {
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "updatedAt") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir) {
+        System.out.println("🔍 DEBUG: TaskController using service class: " + taskService.getClass().getSimpleName());
         return ResponseEntity.ok(taskService.getMyTasksSummary(page, size, sortBy, sortDir));
     }
 

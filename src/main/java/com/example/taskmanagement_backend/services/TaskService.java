@@ -100,19 +100,19 @@ public class TaskService {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String currentUserEmail = userDetails.getUsername();
-        
+
         // Find current user
         User currentUser = userJpaRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Current user not found"));
 
         // Check user role and return appropriate tasks
         boolean isAdminOrOwner = userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN") || 
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN") ||
                                 auth.getAuthority().equals("ROLE_OWNER") ||
                                 auth.getAuthority().equals("ROLE_PROJECT_MANAGER"));
 
         List<Task> tasks;
-        
+
         if (isAdminOrOwner) {
             // ADMIN, OWNER, PROJECT_MANAGER can see all tasks in their organization
             if (currentUser.getOrganization() != null) {
@@ -142,7 +142,7 @@ public class TaskService {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String currentUserEmail = userDetails.getUsername();
-        
+
         // Find current user
         User currentUser = userJpaRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Current user not found"));
@@ -153,8 +153,8 @@ public class TaskService {
 
         // ✅ COMPREHENSIVE: Get all tasks user participates in
         Page<Task> myParticipatingTasks = taskRepository.findMyParticipatingTasks(currentUser, pageable);
-        
-        System.out.println("🎯 COMPREHENSIVE: User " + currentUserEmail + " accessing " + 
+
+        System.out.println("🎯 COMPREHENSIVE: User " + currentUserEmail + " accessing " +
                           myParticipatingTasks.getTotalElements() + " participating tasks " +
                           "(page " + (page + 1) + "/" + myParticipatingTasks.getTotalPages() + ")");
 
@@ -172,7 +172,7 @@ public class TaskService {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String currentUserEmail = userDetails.getUsername();
-        
+
         // Find current user
         User currentUser = userJpaRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Current user not found"));
@@ -183,15 +183,15 @@ public class TaskService {
 
         // ✅ TEMPORARY: Get full tasks and convert to summary (until projection query is fixed)
         Page<Task> myTasks = taskRepository.findMyParticipatingTasks(currentUser, pageable);
-        
+
         // Convert to MyTaskSummaryDto manually
         List<MyTaskSummaryDto> summaryList = myTasks.getContent().stream()
                 .map(task -> convertToMyTaskSummaryDto(task, currentUser))
                 .collect(Collectors.toList());
-        
+
         Page<MyTaskSummaryDto> myTasksSummary = new PageImpl<>(summaryList, pageable, myTasks.getTotalElements());
-        
-        System.out.println("⚡ MANUAL CONVERSION: User " + currentUserEmail + " accessing " + 
+
+        System.out.println("⚡ MANUAL CONVERSION: User " + currentUserEmail + " accessing " +
                           myTasksSummary.getTotalElements() + " task summaries with participation info " +
                           "(page " + (page + 1) + "/" + myTasksSummary.getTotalPages() + ")");
 
@@ -208,19 +208,19 @@ public class TaskService {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String currentUserEmail = userDetails.getUsername();
-        
+
         User currentUser = userJpaRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Current user not found"));
 
         long totalParticipatingTasks = taskRepository.countMyParticipatingTasks(currentUser);
-        
+
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalParticipatingTasks", totalParticipatingTasks);
         stats.put("userEmail", currentUserEmail);
         stats.put("userId", currentUser.getId());
-        
+
         System.out.println("📊 STATS: User " + currentUserEmail + " has " + totalParticipatingTasks + " participating tasks");
-        
+
         return stats;
     }
 
@@ -233,7 +233,7 @@ public class TaskService {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String currentUserEmail = userDetails.getUsername();
-        
+
         User currentUser = userJpaRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Current user not found"));
 
@@ -242,7 +242,7 @@ public class TaskService {
 
         // Check if user has permission to view this task
         boolean hasPermission = canUserAccessTask(currentUser, task, userDetails);
-        
+
         if (!hasPermission) {
             throw new SecurityException("Access denied: You don't have permission to view this task");
         }
@@ -253,14 +253,14 @@ public class TaskService {
     private boolean canUserAccessTask(User currentUser, Task task, UserDetails userDetails) {
         // Check if user is admin/owner/project manager
         boolean isAdminOrOwner = userDetails.getAuthorities().stream()
-                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN") || 
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN") ||
                                 auth.getAuthority().equals("ROLE_OWNER") ||
                                 auth.getAuthority().equals("ROLE_PROJECT_MANAGER"));
 
         if (isAdminOrOwner) {
             // Admin/Owner can see tasks in their organization
             if (currentUser.getOrganization() != null) {
-                return task.getCreator().getOrganization() != null && 
+                return task.getCreator().getOrganization() != null &&
                        task.getCreator().getOrganization().equals(currentUser.getOrganization());
             }
             return true; // System admin can see all
@@ -269,7 +269,7 @@ public class TaskService {
             if (task.getCreator().equals(currentUser)) {
                 return true; // User created this task
             }
-            
+
             // Check if user is assigned to this task
             return task.getAssignees().stream()
                     .anyMatch(assignee -> assignee.getUser().equals(currentUser));
@@ -317,19 +317,19 @@ public class TaskService {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String currentUserEmail = userDetails.getUsername();
-        
+
         User currentUser = userJpaRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Current user not found"));
 
         // Get tasks by project
         List<Task> tasks = taskRepository.findByProjectId(projectId);
-        
+
         // Filter tasks based on user permissions
         List<Task> accessibleTasks = tasks.stream()
                 .filter(task -> canUserAccessTask(currentUser, task, userDetails))
                 .collect(Collectors.toList());
 
-        System.out.println("🎯 PROJECT TASKS: User " + currentUserEmail + " accessing " + 
+        System.out.println("🎯 PROJECT TASKS: User " + currentUserEmail + " accessing " +
                           accessibleTasks.size() + " tasks in project " + projectId);
 
         return accessibleTasks.stream().map(this::mapToDto).collect(Collectors.toList());
@@ -349,25 +349,25 @@ public class TaskService {
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String currentUserEmail = userDetails.getUsername();
-        
+
         User currentUser = userJpaRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Current user not found"));
 
         // Get tasks by team
         List<Task> tasks = taskRepository.findByTeamId(teamId);
-        
+
         // Filter tasks based on user permissions
         List<Task> accessibleTasks = tasks.stream()
                 .filter(task -> canUserAccessTask(currentUser, task, userDetails))
                 .collect(Collectors.toList());
 
-        System.out.println("🎯 TEAM TASKS: User " + currentUserEmail + " accessing " + 
+        System.out.println("🎯 TEAM TASKS: User " + currentUserEmail + " accessing " +
                           accessibleTasks.size() + " tasks in team " + teamId);
 
         return accessibleTasks.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    private TaskResponseDto mapToDto(Task task) {
+    public TaskResponseDto mapToDto(Task task) {
         return TaskResponseDto.builder()
                 .id(task.getId())
                 .title(task.getTitle())
