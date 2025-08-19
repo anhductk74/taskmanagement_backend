@@ -65,13 +65,14 @@ public class SecurityConfig {
 
                         // Users
                         .requestMatchers("/api/users/by-email").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
                         .requestMatchers("/api/users/**").hasAnyRole("OWNER", "PROJECT_MANAGEMENT", "ADMIN")
 
                         // Tasks
                         .requestMatchers("/api/tasks/**").hasAnyRole("ADMIN", "OWNER", "PROJECT_MANAGEMENT", "MEMBER", "LEADER")
 
                         // Projects
-                        .requestMatchers(HttpMethod.GET, "/api/projects/{id}").hasAnyRole("PROJECT_MANAGEMENT", "OWNER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/projects/{id}").hasAnyRole("PROJECT_MANAGEMENT", "OWNER", "ADMIN", "MEMBER")
                         .requestMatchers(HttpMethod.PUT, "/api/projects/{id}").hasAnyRole("PROJECT_MANAGEMENT", "OWNER")
                         .requestMatchers("/api/projects/**").hasAnyRole("ADMIN", "OWNER", "PROJECT_MANAGEMENT")
 
